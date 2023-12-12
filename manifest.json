@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "YouSkip",
+  "version": "1.0.2",
+
+  "description": "Skip Ads automatically",
+  "permissions": ["storage"],
+  "background": {
+    "scripts": ["scripts/background.js"]
+  },
+  "icons": {
+    "64": "icons/logo64.png",
+    "48": "icons/logo48.png"
+  },
+  "action": {
+    "default_icon": {
+      "48": "icons/logo48.png",
+      "64": "icons/logo64.png"
+    },
+    "default_title": "YouSkip",
+    "default_popup": "popup/popup.html"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "js": ["scripts/main.js"]
+    }
+  ]
+}
