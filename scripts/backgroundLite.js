@@ -32,20 +32,26 @@ browser.runtime.onMessage.addListener(function (
   _sender,
   sendResponse
 ) {
-  if (request.action === "generalInformations") {
-    const skipInformations = fetchSkipInformationsLite();
-    console.log(skipInformations);
-    sendResponse(skipInformations);
-  }
-
-  if (request.action === "newSkip") {
-    addNewSkipLite(request.value);
-  }
-
   if (request.action == "setStorageVersion") {
     let storageVersion = STORAGE_VERSIONS.includes(request.value)
       ? request.value
       : DEFAULT_STORAGE_VERSION;
     localStorage.setItem("youSkipStorageVersion", storageVersion);
+  }
+
+  if (request.action == "getStorageVersion") {
+    let storageVersion = localStorage.getItem("youSkipStorageVersion");
+    sendResponse(storageVersion || DEFAULT_STORAGE_VERSION);
+  }
+
+  if (request.version != DEFAULT_STORAGE_VERSION) return;
+
+  if (request.action === "generalInformations") {
+    const skipInformations = fetchSkipInformationsLite();
+    sendResponse(skipInformations);
+  }
+
+  if (request.action === "newSkip") {
+    addNewSkipLite(request.value);
   }
 });

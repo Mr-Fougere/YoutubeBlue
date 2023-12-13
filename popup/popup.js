@@ -11,23 +11,40 @@ const timeConverter = (seconds) => {
   return daysText + hoursText + minutesText + secondsText;
 };
 
-const isLite = (version) => {
-  return version === "lite";
+const isAdvanced = (version) => {
+  return version === "advanced";
+};
+let currentStorageVersion = "lite";
+
+const fetchInformations = () => {
+  browser.runtime
+    .sendMessage({
+      action: "generalInformations",
+      version: currentStorageVersion,
+    })
+    .then(function (response) {
+      const { count, time } = response;
+      const skipCount = document.getElementById("skip-count");
+      const totalSkipTime = document.getElementById("total-skip-time");
+
+      skipCount.textContent = count;
+      totalSkipTime.textContent = timeConverter(time);
+    });
 };
 
 browser.runtime
-  .sendMessage({ action: "generalInformations" })
-  .then(function (response) {
-    const { count, time, storage } = response;
+  .sendMessage({ action: "getStorageVersion" })
+  .then((response) => {
+    currentStorageVersion = response;
     const storageValue = document.getElementById("storage-version");
-    const skipCount = document.getElementById("skip-count");
-    const totalSkipTime = document.getElementById("total-skip-time");
-
-    skipCount.textContent = count;
-    totalSkipTime.textContent = timeConverter(time);
-    storageValue.value = isLite(version);
-
+    storageValue.checked = isAdvanced(currentStorageVersion);
+    fetchInformations();
     storageValue.addEventListener("change", (event) => {
-      console.log(event.target.value);
+      const newStorageVersion = event.target.checked ? "advanced" : "lite";
+      browser.runtime.sendMessage({
+        action: "setStorageVersion",
+        value: newStorageVersion,
+      });
+      currentStorageVersion = newStorageVersion;
     });
   });
