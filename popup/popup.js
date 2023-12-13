@@ -11,11 +11,23 @@ const timeConverter = (seconds) => {
   return daysText + hoursText + minutesText + secondsText;
 };
 
+const isLite = (version) => {
+  return version === "lite";
+};
+
 browser.runtime
-  .sendMessage({ action: "skipInformations" })
+  .sendMessage({ action: "generalInformations" })
   .then(function (response) {
-    const { count, time } = response;
-    document.getElementById("skip-count").textContent = count;
-    document.getElementById("total-skip-time").textContent =
-      timeConverter(time);
+    const { count, time, storage } = response;
+    const storageValue = document.getElementById("storage-version");
+    const skipCount = document.getElementById("skip-count");
+    const totalSkipTime = document.getElementById("total-skip-time");
+
+    skipCount.textContent = count;
+    totalSkipTime.textContent = timeConverter(time);
+    storageValue.value = isLite(version);
+
+    storageValue.addEventListener("change", (event) => {
+      console.log(event.target.value);
+    });
   });
