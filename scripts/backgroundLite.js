@@ -4,9 +4,9 @@ const DEFAULT_STORAGE_VERSION = "lite";
 const STORAGE_VERSIONS = ["lite", "advanced"];
 
 const fetchSkipInformationsLite = () => {
-  var count = localStorage.getItem("youSkipCount");
-  var timeSkipped = localStorage.getItem("youSkipTimeSkipped");
-  var storageVersion = localStorage.getItem("youSkipStorageVersion");
+  const count = localStorage.getItem("youSkipCount");
+  const timeSkipped = localStorage.getItem("youSkipTimeSkipped");
+  const storageVersion = localStorage.getItem("youSkipStorageVersion");
 
   return {
     count: count || DEFAULT_COUNT,
@@ -15,16 +15,27 @@ const fetchSkipInformationsLite = () => {
   };
 };
 
-const addNewSkipLite = (value) => {
+const addNewSkipLite = (duration) => {
   var youSkipCount = parseInt(localStorage.getItem("youSkipCount"));
   var youSkipTimeSkipped = parseInt(localStorage.getItem("youSkipTimeSkipped"));
 
   if (!youSkipCount) youSkipCount = 0;
   if (!youSkipTimeSkipped) youSkipTimeSkipped = 0;
   youSkipCount++;
-  youSkipTimeSkipped += parseInt(value);
+  youSkipTimeSkipped += parseInt(duration);
   localStorage.setItem("youSkipCount", youSkipCount);
   localStorage.setItem("youSkipTimeSkipped", youSkipTimeSkipped);
+};
+
+const getStorageVersion = () => {
+  return localStorage.getItem("youSkipStorageVersion");
+};
+
+const setStorageVersion = (version) => {
+  let storageVersion = STORAGE_VERSIONS.includes(version)
+    ? version
+    : DEFAULT_STORAGE_VERSION;
+  localStorage.setItem("youSkipStorageVersion", storageVersion);
 };
 
 browser.runtime.onMessage.addListener(function (
@@ -33,25 +44,21 @@ browser.runtime.onMessage.addListener(function (
   sendResponse
 ) {
   if (request.action == "setStorageVersion") {
-    let storageVersion = STORAGE_VERSIONS.includes(request.value)
-      ? request.value
-      : DEFAULT_STORAGE_VERSION;
-    localStorage.setItem("youSkipStorageVersion", storageVersion);
+    setStorageVersion(request.value);
   }
 
   if (request.action == "getStorageVersion") {
-    let storageVersion = localStorage.getItem("youSkipStorageVersion");
-    sendResponse(storageVersion || DEFAULT_STORAGE_VERSION);
+    sendResponse(getStorageVersion() || DEFAULT_STORAGE_VERSION);
   }
 
   if (request.version != DEFAULT_STORAGE_VERSION) return;
 
-  if (request.action === "generalInformations") {
-    const skipInformations = fetchSkipInformationsLite();
-    sendResponse(skipInformations);
+  if (request.action === "newSkip") {
+    addNewSkipLite(request.duration);
   }
 
-  if (request.action === "newSkip") {
-    addNewSkipLite(request.value);
+  if (request.action === "fetchGeneralInformations") {
+    const skipInformations = fetchSkipInformationsLite();
+    sendResponse(skipInformations);
   }
 });

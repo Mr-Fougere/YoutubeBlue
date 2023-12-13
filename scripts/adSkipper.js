@@ -24,8 +24,7 @@ const skipAd = () => {
   const skipButton = adPlayer.firstChild.lastChild;
 
   const skippableAd = skipButton.classList.value == skipButtonClassList;
-
-  addNewSkip(skippableAd ? DEFAULT_AD_TIME : videoDuration);
+  addNewSkip(skippableAd, skippableAd ? DEFAULT_AD_TIME : videoDuration);
 };
 
 const playerCallback = (mutationsList, _observer) => {
@@ -35,11 +34,20 @@ const playerCallback = (mutationsList, _observer) => {
   }
 };
 
-const addNewSkip = (time) => {
-  browser.runtime.sendMessage({
-    action: "newSkip",
-    value: time,
-  });
+const addNewSkip = (skippable, duration) => {
+  browser.runtime
+    .sendMessage({
+      action: "getStorageVersion",
+    })
+    .then((response) => {
+      const message = {
+        action: "newSkip",
+        duration: duration,
+        skippable: skippable,
+        version: response,
+      };
+      browser.runtime.sendMessage(message);
+    });
 };
 
 const setPlayer = () => {

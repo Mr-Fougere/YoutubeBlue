@@ -19,16 +19,24 @@ let currentStorageVersion = "lite";
 const fetchInformations = () => {
   browser.runtime
     .sendMessage({
-      action: "generalInformations",
+      action: "fetchGeneralInformations",
       version: currentStorageVersion,
     })
     .then(function (response) {
-      const { count, time } = response;
-      const skipCount = document.getElementById("skip-count");
+      const totalSkipCount = document.getElementById("total-skip-count");
       const totalSkipTime = document.getElementById("total-skip-time");
+      const monthUnskippableCount = document.getElementById("month-unskippable-count");
+      const monthSkippableCount = document.getElementById("month-skippable-count");
 
-      skipCount.textContent = count;
-      totalSkipTime.textContent = timeConverter(time);
+      if (currentStorageVersion === "lite") {
+        const { count, time } = response;
+        totalSkipCount.textContent = count;
+        totalSkipTime.textContent = timeConverter(time);
+      } else {
+        const { skippable, unskippable } = response;
+        const count = skippable.length + unskippable.length;
+        const time = skippable.reduce((acc, curr) => acc + curr.duration, 0);
+      }
     });
 };
 
