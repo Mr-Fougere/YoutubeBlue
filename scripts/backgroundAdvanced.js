@@ -15,6 +15,11 @@ const createSkipTable = (db) => {
   }
 };
 
+const nourrishData = (object) => {
+  generalSkipsData[object.type].push(object);
+  monthSkipsData[object.type].push(object);
+};
+
 const addSkip = (object) => {
   if (!object && !dataBase) return;
   const transaction = dataBase.transaction([SKIP_TABLE_NAME], "readwrite");
@@ -26,7 +31,16 @@ const addSkip = (object) => {
     duration: object.duration || 5,
   };
 
-  objectStore.add(newSkip);
+  const skipRequest = objectStore.add(newSkip);
+
+  skipRequest.onsuccess = function () {
+    const newIndex = skipRequest.result;
+    const getRequest = objectStore.get(newIndex);
+    getRequest.onsuccess = function () {
+      const result = getRequest.result;
+      nourrishData(result);
+    };
+  };
 };
 
 const fetchSkipInformations = (dateArray = []) => {
@@ -91,10 +105,7 @@ const buildCurrentMonthArray = () => {
 
 const formatGeneral = (data) => {
   const { skippable, unskippable } = data;
-  const skippableTime = skippable.reduce(
-    (acc, curr) => acc + curr.duration,
-    0
-  );
+  const skippableTime = skippable.reduce((acc, curr) => acc + curr.duration, 0);
   const unskippableTime = unskippable.reduce(
     (acc, curr) => acc + curr.duration,
     0
@@ -118,14 +129,14 @@ const formatMonthly = (data) => {
   const unskippableCount = unskippable.length;
   const skippableCount = skippable.length;
   const time = skippableTime + unskippableTime;
-  const averageUnskippableTime = unskippableTime / unskippable.length;
+  const averageUnskippableTime = Math.round(unskippableTime / unskippable.length);
 
   return {
     unskippableCount,
     skippableCount,
     time,
     averageUnskippableTime,
-  };  
+  };
 };
 
 dataBasePromise.onsuccess = function () {
