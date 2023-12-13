@@ -1,5 +1,3 @@
-const AD_TIME = 5; // in seconds
-
 const timeConverter = (seconds) => {
   const days = Math.floor(seconds / (3600 * 24));
   const daysText = days > 0 ? days + ` day${days > 1 ? "s" : ""} ` : "";
@@ -9,16 +7,16 @@ const timeConverter = (seconds) => {
   const minutesText =
     minutes > 0 ? minutes + ` minutes${minutes > 1 ? "s" : ""} ` : "";
   const remainingSeconds = seconds % 60;
-  const secondsText = remainingSeconds > 0 ? remainingSeconds + " seconds" : "";
+  const secondsText = remainingSeconds + " seconds";
   return daysText + hoursText + minutesText + secondsText;
 };
 
 browser.runtime
-  .sendMessage({ action: "getYouSkipCount" })
+  .sendMessage({ action: "skipInformations" })
   .then(function (response) {
     const youSkipCount = response.youSkipCount;
+    const youSkipTimeSkipped = response.youSkipTimeSkipped;
     document.getElementById("skip-count").textContent = youSkipCount;
-    document.getElementById("total-skip-time").textContent = timeConverter(
-      youSkipCount * AD_TIME
-    );
+    document.getElementById("total-skip-time").textContent =
+      timeConverter(youSkipTimeSkipped);
   });
