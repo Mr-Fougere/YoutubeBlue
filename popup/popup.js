@@ -1,3 +1,5 @@
+let currentStorageVersion = "lite";
+
 const timeConverter = (seconds) => {
   const days = Math.floor(seconds / (3600 * 24));
   const daysText = days > 0 ? days + ` day${days > 1 ? "s" : ""} ` : "";
@@ -14,9 +16,8 @@ const timeConverter = (seconds) => {
 const isAdvanced = (version) => {
   return version === "advanced";
 };
-let currentStorageVersion = "lite";
 
-const fetchInformations = () => {
+const fetchGeneralInformations = () => {
   browser.runtime
     .sendMessage({
       action: "fetchGeneralInformations",
@@ -25,18 +26,33 @@ const fetchInformations = () => {
     .then(function (response) {
       const totalSkipCount = document.getElementById("total-skip-count");
       const totalSkipTime = document.getElementById("total-skip-time");
-      const monthUnskippableCount = document.getElementById("month-unskippable-count");
-      const monthSkippableCount = document.getElementById("month-skippable-count");
+      const { count, time } = response;
+      totalSkipCount.textContent = count;
+      totalSkipTime.textContent = timeConverter(time);
+    });
+};
 
-      if (currentStorageVersion === "lite") {
-        const { count, time } = response;
-        totalSkipCount.textContent = count;
-        totalSkipTime.textContent = timeConverter(time);
-      } else {
-        const { skippable, unskippable } = response;
-        const count = skippable.length + unskippable.length;
-        const time = skippable.reduce((acc, curr) => acc + curr.duration, 0);
-      }
+const fetchMonthInformations = () => {
+  browser.runtime
+    .sendMessage({
+      action: "fetchMonthInformations",
+      version: currentStorageVersion,
+    })
+    .then(function (response) {
+      const monthUnskippableCount = document.getElementById(
+        "month-unskippable-count"
+      );
+      const monthSkippableCount = document.getElementById(
+        "month-skippable-count"
+      );
+      const monthSkipTime = document.getElementById("month-skip-time");
+      const monthAverageTime = document.getElementById("month-average-time");
+      const { unskippableCount, skippableCount, time, averageUnskippableTime } = response;
+
+      monthUnskippableCount.textContent = unskippableCount;
+      monthSkippableCount.textContent = skippableCount;
+      monthSkipTime.textContent = timeConverter(time);
+      monthAverageTime.textContent = timeConverter(averageUnskippableTime);
     });
 };
 
@@ -46,7 +62,8 @@ browser.runtime
     currentStorageVersion = response;
     const storageValue = document.getElementById("storage-version");
     storageValue.checked = isAdvanced(currentStorageVersion);
-    fetchInformations();
+    fetchGeneralInformations();
+    fetchMonthInformations();
     storageValue.addEventListener("change", (event) => {
       const newStorageVersion = event.target.checked ? "advanced" : "lite";
       browser.runtime.sendMessage({
