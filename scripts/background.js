@@ -9,8 +9,8 @@ browser.runtime.onMessage.addListener(function (
     if (youSkipCount === null) youSkipCount = 0;
     if (youSkipTimeSkipped === null) youSkipTimeSkipped = 0;
     const onMessageResponse = {
-      youSkipCount: youSkipCount,
-      youSkipTimeSkipped: youSkipTimeSkipped,
+      count: youSkipCount,
+      time: youSkipTimeSkipped,
     };
     sendResponse(onMessageResponse);
   }
@@ -25,8 +25,6 @@ browser.runtime.onMessage.addListener(function (
     if (!youSkipTimeSkipped) youSkipTimeSkipped = 0;
     youSkipCount++;
     youSkipTimeSkipped += parseInt(request.value);
-    console.log(request.value)
-    console.log("youSkipTimeSkipped: " + youSkipTimeSkipped);
     localStorage.setItem("youSkipCount", youSkipCount);
     localStorage.setItem("youSkipTimeSkipped", youSkipTimeSkipped);
   }

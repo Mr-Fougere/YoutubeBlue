@@ -14,9 +14,8 @@ const timeConverter = (seconds) => {
 browser.runtime
   .sendMessage({ action: "skipInformations" })
   .then(function (response) {
-    const youSkipCount = response.youSkipCount;
-    const youSkipTimeSkipped = response.youSkipTimeSkipped;
-    document.getElementById("skip-count").textContent = youSkipCount;
+    const { count, time } = response;
+    document.getElementById("skip-count").textContent = count;
     document.getElementById("total-skip-time").textContent =
-      timeConverter(youSkipTimeSkipped);
+      timeConverter(time);
   });
