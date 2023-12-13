@@ -15,7 +15,6 @@ const forwardAdVideo = () => {
 };
 
 const skipAd = () => {
-  console.log("skipping ad");
   const adPlayer = document.getElementsByClassName(
     "ytp-ad-player-overlay-skip-or-preview"
   )[0];
@@ -57,7 +56,7 @@ const setPlayer = () => {
     videoTryCount++;
     setTimeout(() => setPlayer, 100);
   }
-  
+
   video.addEventListener("playing", () => setTimeout(() => skipAd(), 250));
 
   const playerObserver = new MutationObserver(playerCallback);
