@@ -3,7 +3,7 @@ body {
   font-family: "Roboto", sans-serif;
   width: 200px;
   height: 350px;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 img {
@@ -31,6 +31,7 @@ header {
 #version img {
   width: 20px;
   height: 20px;
+  object-fit: contain;
 }
 
 #logo .logo-image,
@@ -42,12 +43,16 @@ header {
   opacity: 0.5;
 }
 
-
-body:has(#ads-skipper:not(:checked)) .ads{
+body:has(#ads-skipper:not(:checked)) .ads {
   display: none;
 }
 
-#error-flash ,footer .refresh-warning{
+footer {
+  text-align: center;
+}
+
+#error-flash,
+footer .refresh-warning {
   color: red;
   opacity: 0.6;
   font-size: x-small;

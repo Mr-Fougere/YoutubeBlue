@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "YouSkip",
-  "version": "0.2.2",
-  "version_name": "0.2.2-beta",
+  "name": "YoutubeBlue",
+  "version": "0.2.3",
+  "version_name": "0.2.3-beta",
   "author": "Mr-Fougere",
-  "description": "Skip Ads automatically",
-  "permissions": ["storage","tabs"],
+  "description": "YoutubeBlue is a browser extension with features to improve use of YouTube ",
+  "permissions": ["storage", "tabs"],
   "update_url": "https://github.com/Mr-Fougere/youSkip",
   "background": {
     "scripts": ["scripts/background.js"]
@@ -14,16 +14,18 @@
     "48": "assets/icons/logo48.png",
     "64": "assets/icons/logo64.png",
     "96": "assets/icons/logo96.png",
-    "192": "assets/icons/logo192.png"
+    "128": "assets/icons/logo128.png",
+    "256": "assets/icons/logo256.png"
   },
   "action": {
     "default_icon": {
       "48": "assets/icons/logo48.png",
       "64": "assets/icons/logo64.png",
       "96": "assets/icons/logo96.png",
-      "192": "assets/icons/logo192.png"
+      "128": "assets/icons/logo128.png",
+      "256": "assets/icons/logo256.png"
     },
-    "default_title": "YouSkip",
+    "default_title": "YoutubeBlue",
     "default_popup": "views/popup.html"
   },
 
