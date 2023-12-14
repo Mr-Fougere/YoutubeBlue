@@ -6,7 +6,6 @@ let dataBase, skipsData;
 
 const createMonthRecapTable = (db) => {
   if (!db.objectStoreNames.contains(MONTH_RECAP_TABLE_NAME)) {
-    console.log(db);
     const skipTable = db.createObjectStore(MONTH_RECAP_TABLE_NAME, {
       keyPath: "id",
       autoIncrement: true,
@@ -25,6 +24,10 @@ dataBasePromise.onupgradeneeded = function () {
 
 dataBasePromise.onsuccess = function () {
   dataBase = dataBasePromise.result;
+  nourrishData();
+};
+
+const nourrishData = () => {
   const informations = fetchSkipInformations();
 
   informations.then((response) => {
@@ -36,24 +39,38 @@ dataBasePromise.onerror = function () {
   console.error(dataBasePromise.error);
 };
 
-const getMonthRecap = (month) => {
-  if (!dataBase && !month) return;
+const getMonthRecap = (object) => {
+  if (!dataBase && !object) return Promise.reject("Invalid parameters");
+
+  const currentMonth = new Date().getMonth();
 
   return new Promise((resolve, reject) => {
     const transaction = dataBase.transaction(
       [MONTH_RECAP_TABLE_NAME],
-      "readwrite"
+      "readonly"
     );
     const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
-    const dataRequest = objectStore.index("monthIndex").openCursor(month);
+    const index = objectStore.index("monthIndex");
+    const request = index.openCursor(IDBKeyRange.only(currentMonth));
 
-    dataRequest.onsuccess = function (e) {
-      console.log(e.target.result);
-      const result = e.target.result;
-      resolve(result);
+    request.onsuccess = function (e) {
+      const cursor = e.target.result;
+      const objectType = object.skippable ? "skippable" : "unskippable";
+
+      if (cursor) {
+        const cursorValue = cursor.value;
+
+        if (cursorValue.type === objectType) {
+          resolve(cursorValue);
+        } else {
+          cursor.continue();
+        }
+      } else {
+        resolve(null);
+      }
     };
 
-    dataRequest.onerror = function (e) {
+    request.onerror = function (e) {
       console.error(e.target.error);
       reject(null);
     };
@@ -61,64 +78,78 @@ const getMonthRecap = (month) => {
 };
 
 const updateMonthRecap = (monthRecap, object) => {
+  console.log(monthRecap, object);
   if (!dataBase && !monthRecap && !object) return;
 
-  const transaction = dataBase.transaction(
-    [MONTH_RECAP_TABLE_NAME],
-    "readwrite"
-  );
-  const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
+  console.log("udpdate");
 
-  const updatedMonthRecap = {
-    ...monthRecap,
-    count: monthRecap.count + 1,
-    time: monthRecap.time + object.time,
-  };
+  return new Promise((resolve, reject) => {
+    const transaction = dataBase.transaction(
+      [MONTH_RECAP_TABLE_NAME],
+      "readwrite"
+    );
+    const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
 
-  const updateRequest = objectStore.put(updatedMonthRecap);
+    const updatedMonthRecap = {
+      ...monthRecap,
+      count: monthRecap.count + 1,
+      time: monthRecap.time + object.duration,
+    };
 
-  updateRequest.onsuccess = function () {
-    const getRequest = objectStore.get(updatedMonthRecap.id);
-    console.log(updateRequest.result);
-  };
+    const updateRequest = objectStore.put(updatedMonthRecap);
+
+    updateRequest.onsuccess = function () {
+      console.log("success");
+      resolve();
+    };
+
+    updateRequest.onerror = function () {
+      reject(null);
+    };
+  });
 };
 
 const createMonthRecap = (object) => {
-  const transaction = dataBase.transaction(
-    [MONTH_RECAP_TABLE_NAME],
-    "readwrite"
-  );
-  const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
-
-  const newSkip = {
-    month: new Date().getMonth(),
-    type: object.skippable ? "skippable" : "unskippable",
-    count: 1,
-    time: object.duration,
-  };
-
-  const skipRequest = objectStore.add(newSkip);
-
-  skipRequest.onsuccess = function () {
-    const newIndex = skipRequest.result;
-    const getRequest = objectStore.get(newIndex);
-    getRequest.onsuccess = function () {
-      const result = getRequest.result;
+  return new Promise((resolve, reject) => {
+    const transaction = dataBase.transaction(
+      [MONTH_RECAP_TABLE_NAME],
+      "readwrite"
+    );
+    const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
+    const currentMonth = new Date().getMonth();
+    const newSkip = {
+      month: currentMonth,
+      type: object.skippable ? "skippable" : "unskippable",
+      count: 1,
+      time: object.duration,
     };
-  };
+
+    const skipRequest = objectStore.add(newSkip);
+
+    skipRequest.onsuccess = function () {
+      resolve();
+    };
+
+    skipRequest.onerror = function () {
+      reject(null);
+    };
+  });
 };
 
 const updateCurrentMonthRecap = (object) => {
   if (!object && !dataBase) return;
 
-  getMonthRecap(new Date().getMonth()).then((monthRecap) => {
-    let updatedMonthRecap = null;
+
+  getMonthRecap(object).then((monthRecap) => {
     if (monthRecap) {
-      updatedMonthRecap = updateMonthRecap(monthRecap, object);
+      updateMonthRecap(monthRecap, object).then(() => {
+        nourrishData();
+      });
     } else {
-      updatedMonthRecap = createMonthRecap(object);
+      createMonthRecap(object).then(() => {
+        nourrishData();
+      });
     }
-    console.log(updatedMonthRecap);
   });
 };
 
@@ -133,9 +164,8 @@ const fetchSkipInformations = () => {
     const objectStore = transaction.objectStore(MONTH_RECAP_TABLE_NAME);
     const dataRequest = objectStore.getAll();
 
-    dataRequest.onsuccess = function (e) {
-      const result = e.target.result;
-      resolve(result);
+    dataRequest.onsuccess = function () {
+      resolve(dataRequest.result);
     };
 
     dataRequest.onerror = function () {
@@ -152,12 +182,14 @@ const monthlyFormat = (data, month) => {
     };
 
   const monthData = data.filter((item) => item.month === month);
-  const unskippableCount = monthData.filter(
+  const unskippableCount = monthData.find(
     (item) => item.type === "unskippable"
   ).count;
-  const skippableCount = monthData.filter(
+  const skippableCount = monthData.find(
     (item) => item.type === "skippable"
   ).count;
+
+  console.log(unskippableCount, skippableCount);
   return {
     unskippableCount,
     skippableCount,
