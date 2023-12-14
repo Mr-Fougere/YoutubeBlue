@@ -178,12 +178,14 @@ const monthlyFormat = (data, month) => {
     };
 
   const monthData = data.filter((item) => item.month === month);
-  const unskippableCount = monthData.find(
+  const unskippableData = monthData.find(
     (item) => item.type === "unskippable"
-  ).count;
-  const skippableCount = monthData.find(
+  );
+  const skippableData = monthData.find(
     (item) => item.type === "skippable"
-  ).count;
+  );
+  const unskippableCount = unskippableData ? unskippableData.count : 0;
+  const skippableCount = skippableData ? skippableData.count : 0;
 
   return {
     unskippableCount,

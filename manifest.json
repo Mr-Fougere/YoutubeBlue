@@ -1,10 +1,12 @@
 {
   "manifest_version": 3,
   "name": "YouSkip",
-  "version": "0.2-beta",
+  "version": "0.2",
+  "version_name": "0.2-beta",
   "author": "Mr-Fougere",
   "description": "Skip Ads automatically",
   "permissions": ["storage"],
+  "update_url": "https://github.com/Mr-Fougere/youSkip",
   "background": {
     "scripts": ["scripts/background.js"]
   },
@@ -30,5 +32,8 @@
       "matches": ["*://www.youtube.com/watch?*"],
       "js": ["scripts/adSkipper.js"]
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": { "id": "{8a2b4c6d-0e1f-9c3d-7b5e-f8a1d0c2e3f4}" }
+  }
 }

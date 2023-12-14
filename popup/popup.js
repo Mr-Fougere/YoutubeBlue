@@ -7,6 +7,7 @@ const monthSkippableCount = document.getElementById("month-skippable-count");
 const averageTime = document.getElementById("average-ads-time");
 const errorDisplay = document.getElementById("error-flash");
 const adsSkipper = document.getElementById("ads-skipper");
+const versionName = document.getElementById("version-name");
 
 const timeConverter = (seconds) => {
   const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -41,6 +42,7 @@ const fetchAllInformations = () => {
       averageTime.textContent = averageAdsTime + "s";
     })
     .catch(() => {
+      console.log(e);
       errorDisplay.textContent = "An error occurred while fetching data";
     });
 };
@@ -54,7 +56,8 @@ const fetchMonthInformations = () => {
       monthUnskippableCount.textContent = unskippableCount;
       monthSkippableCount.textContent = skippableCount;
     })
-    .catch(() => {
+    .catch((e) => {
+      console.log(e);
       errorDisplay.textContent = "An error occurred while fetching data";
     });
 };
@@ -71,7 +74,7 @@ const featureActions = () => {
   browser.runtime
     .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
     .then((response) => {
-      adsSkipper.checked = response 
+      adsSkipper.checked = response;
     });
 
   adsSkipper.addEventListener("click", (e) => {
@@ -79,6 +82,11 @@ const featureActions = () => {
   });
 };
 
+const setVersionName = () => {
+  versionName.textContent = "v" + browser.runtime.getManifest().version_name;
+};
+
+setVersionName();
+featureActions();
 fetchAllInformations();
 fetchMonthInformations();
-featureActions();
