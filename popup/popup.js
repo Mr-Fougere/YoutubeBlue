@@ -49,7 +49,6 @@ const fetchMonthInformations = () => {
   fetchInformation(currentMonth)
     .then((response) => {
       const { unskippableCount, skippableCount } = response;
-      console.log(response);
 
       monthUnskippableCount.textContent = unskippableCount;
       monthSkippableCount.textContent = skippableCount;

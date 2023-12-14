@@ -2,6 +2,8 @@ const observerConfig = { childList: true, subtree: true };
 const skipCountName = "youSkipCount";
 const targetMutationClassList = "video-ads ytp-ad-module";
 const skipButtonClassList = "ytp-ad-skip-button-slot";
+const doubleSkipButtonClassList =
+  "ytp-ad-skip-button-container ytp-ad-skip-button-container-detached";
 const DEFAULT_AD_TIME = 5; // in seconds
 let videoTryCount = 0;
 let playerTryCount = 0;
@@ -12,6 +14,21 @@ const forwardAdVideo = () => {
   video.currentTime = video.duration;
   video.play();
   return { videoDuration: Math.round(video.duration) };
+};
+
+const checkDoubleSkipAd = () => {
+  const doubleSkip = document.getElementsByClassName(
+    "video-ads ytp-ad-module"
+  )[0];
+
+  if (!doubleSkip) return;
+
+  const doubleSkipButton = doubleSkip.getElementsByClassName(
+    doubleSkipButtonClassList
+  )[0];
+  if (!doubleSkipButton) return;
+
+  doubleSkipButton.click();
 };
 
 const skipAd = () => {
@@ -26,6 +43,7 @@ const skipAd = () => {
   const skipButton = adPlayer.firstChild.lastChild;
 
   const skippableAd = skipButton.classList.value == skipButtonClassList;
+  checkDoubleSkipAd();
   addNewSkip(skippableAd, skippableAd ? DEFAULT_AD_TIME : videoDuration);
 };
 

@@ -78,10 +78,7 @@ const getMonthRecap = (object) => {
 };
 
 const updateMonthRecap = (monthRecap, object) => {
-  console.log(monthRecap, object);
   if (!dataBase && !monthRecap && !object) return;
-
-  console.log("udpdate");
 
   return new Promise((resolve, reject) => {
     const transaction = dataBase.transaction(
@@ -99,7 +96,6 @@ const updateMonthRecap = (monthRecap, object) => {
     const updateRequest = objectStore.put(updatedMonthRecap);
 
     updateRequest.onsuccess = function () {
-      console.log("success");
       resolve();
     };
 
@@ -189,7 +185,6 @@ const monthlyFormat = (data, month) => {
     (item) => item.type === "skippable"
   ).count;
 
-  console.log(unskippableCount, skippableCount);
   return {
     unskippableCount,
     skippableCount,
