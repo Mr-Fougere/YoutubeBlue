@@ -62,12 +62,22 @@ const fetchMonthInformations = () => {
     });
 };
 
+const refreshYoutubeTabs = () => {
+  chrome.tabs.query({ currentWindow: true }, function (tabs) {
+    const youtubeTabs = tabs.filter((tab) => tab.url.includes("youtube.com/watch?v="));
+    youtubeTabs.forEach((tab) => {
+      chrome.tabs.reload(tab.id);
+    });
+  });
+};
+
 const sendFeatureState = (name, state) => {
   browser.runtime.sendMessage({
     action: "setFeatureState",
     name: name,
     state: state,
   });
+  refreshYoutubeTabs();
 };
 
 const featureActions = () => {
@@ -77,7 +87,7 @@ const featureActions = () => {
       adsSkipper.checked = response;
     });
 
-  adsSkipper.addEventListener("click", (e) => {
+  adsSkipper.addEventListener("change", (e) => {
     sendFeatureState("adsSkipper", e.target.checked);
   });
 };

@@ -1,12 +1,11 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles/variables.css" />
-    <link rel="stylesheet" href="styles/popup.css" />
-    <link rel="stylesheet" href="styles/section-title.css" />
-    <link rel="stylesheet" href="styles/section-content.css" />
-    <link rel="stylesheet" href="styles/bool-switch.css" />
-
+    <link rel="stylesheet" href="../assets/styles/variables.css" />
+    <link rel="stylesheet" href="../assets/styles/popup.css" />
+    <link rel="stylesheet" href="../assets/styles/section-title.css" />
+    <link rel="stylesheet" href="../assets/styles/section-content.css" />
+    <link rel="stylesheet" href="../assets/styles/bool-switch.css" />
   </head>
 
   <body>
@@ -17,7 +16,7 @@
       </div>
 
       <div id="version">
-        <span class="version-index" id="version-name" ></span>
+        <span class="version-index" id="version-name"></span>
         <a class="version-link" href="https://github.com/Mr-Fougere/youSkip">
           <img class="github-icon" src="../assets/images/github.png" />
         </a>
@@ -103,14 +102,25 @@
         <div class="section-content">
           <div class="section-content-action">
             <div class="bool-switch-block">
-              <input class="bool-switch__checkbox" id="ads-skipper" type="checkbox" name="ads-skipper" />
+              <input
+                class="bool-switch__checkbox"
+                id="ads-skipper"
+                type="checkbox"
+                name="ads-skipper"
+              />
               <label class="bool-switch__label" for="ads-skipper"></label>
             </div>
-            <label class="section-content-action-name" for="ads-skipper"> Ads Skipper</label>
+            <label class="section-content-action-name" for="ads-skipper">
+              Ads Skipper</label
+            >
           </div>
         </div>
       </div>
     </div>
-    <script src="popup.js"></script>
+
+    <footer>
+      <span class="refresh-warning">Youtube tabs will be refresh on changes</span>
+    </footer>
+    <script src="../scripts/popup.js"></script>
   </body>
 </html>

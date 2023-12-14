@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
   "name": "YouSkip",
-  "version": "0.2",
-  "version_name": "0.2-beta",
+  "version": "0.2.2",
+  "version_name": "0.2.2-beta",
   "author": "Mr-Fougere",
   "description": "Skip Ads automatically",
-  "permissions": ["storage"],
+  "permissions": ["storage","tabs"],
   "update_url": "https://github.com/Mr-Fougere/youSkip",
   "background": {
     "scripts": ["scripts/background.js"]
@@ -24,7 +24,7 @@
       "192": "assets/icons/logo192.png"
     },
     "default_title": "YouSkip",
-    "default_popup": "popup/popup.html"
+    "default_popup": "views/popup.html"
   },
 
   "content_scripts": [
