@@ -223,7 +223,4 @@ browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     sendResponse(formatData(skipsData, request.month));
   }
 
-  if (request.action == "updateFeatureStatus") {
-    console.log(request);
-  }
 });

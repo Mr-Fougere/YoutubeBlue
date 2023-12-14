@@ -24,20 +24,25 @@ header {
   align-items: center;
 }
 
-#logo img,#version img{
+#logo img,
+#version img {
   width: 20px;
   height: 20px;
 }
 
-#logo .logo-image,#version .version-index{
+#logo .logo-image,
+#version .version-index {
   margin-right: 3px;
 }
 
-.github-icon{
+.github-icon {
   opacity: 0.5;
 }
 
-#error-flash{
-  color: red
+#error-flash {
+  color: red;
 }
 
+body:has(#ads-skipper:not(:checked)) .ads{
+  display: none;
+}

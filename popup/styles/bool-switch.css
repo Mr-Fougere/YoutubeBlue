@@ -9,11 +9,11 @@
     display: none;
   }
   
-  .bool-switch__checkbox:not(:checked) + label {
+  .bool-switch__checkbox:checked + label {
     background-color: var(--item-text-color);
   }
   
-  .bool-switch__checkbox:not(:checked) + label::after {
+  .bool-switch__checkbox:checked + label::after {
     left: calc(100% - 0.31rem);
     transform: translateX(-100%);
   }
