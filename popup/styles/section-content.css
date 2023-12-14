@@ -32,4 +32,5 @@
 .section-content-action-name{
   margin-left: 5px;
   color: var(--item-value-color);
+  font-weight: bold;
 }
