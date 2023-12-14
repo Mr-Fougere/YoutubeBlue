@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YouSkip",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "author": "Mr-Fougere",
   "description": "Skip Ads automatically",
   "permissions": ["storage"],
