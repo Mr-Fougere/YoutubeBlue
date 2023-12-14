@@ -21,8 +21,8 @@
   
   .bool-switch__label {
     cursor: pointer;
-    height: 2rem;
-    width: 4rem;
+    height: 1rem;
+    width: 2rem;
     background-color: var(--disabled-background);
     border-radius: 1.1rem;
     display: block;
@@ -35,8 +35,8 @@
   .bool-switch__label::after {
     content: '';
     position: absolute;
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 0.5rem;
+    width: 0.5rem;
     top: 0.25rem;
     left: 0.31rem;
     border-radius: 1.1rem;
@@ -45,6 +45,6 @@
   }
   
   .bool-switch__label:active::after {
-    width: 2rem;
+    width: 1rem;
   }
   
