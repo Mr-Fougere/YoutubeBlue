@@ -6,7 +6,7 @@
   "description": "Skip Ads automatically",
   "permissions": ["storage"],
   "background": {
-    "scripts": ["scripts/backgroundLite.js", "scripts/backgroundAdvanced.js"]
+    "scripts": ["scripts/background.js"]
   },
   "icons": {
     "48": "assets/icons/logo48.png",

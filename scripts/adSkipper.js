@@ -2,10 +2,10 @@ const observerConfig = { childList: true, subtree: true };
 const skipCountName = "youSkipCount";
 const targetMutationClassList = "video-ads ytp-ad-module";
 const skipButtonClassList = "ytp-ad-skip-button-slot";
-const resolutionStorageName = "youSkipResolutionIndex";
 const DEFAULT_AD_TIME = 5; // in seconds
 let videoTryCount = 0;
 let playerTryCount = 0;
+let adsSkipperEnabled = true;
 
 const forwardAdVideo = () => {
   const video = document.getElementsByTagName("VIDEO")[0];
@@ -15,6 +15,8 @@ const forwardAdVideo = () => {
 };
 
 const skipAd = () => {
+  if (!adsSkipperEnabled) return;
+
   const adPlayer = document.getElementsByClassName(
     "ytp-ad-player-overlay-skip-or-preview"
   )[0];
@@ -35,19 +37,12 @@ const playerCallback = (mutationsList, _observer) => {
 };
 
 const addNewSkip = (skippable, duration) => {
-  browser.runtime
-    .sendMessage({
-      action: "getStorageVersion",
-    })
-    .then((response) => {
-      const message = {
-        action: "newSkip",
-        duration: duration,
-        skippable: skippable,
-        version: response,
-      };
-      browser.runtime.sendMessage(message);
-    });
+  const message = {
+    action: "newSkip",
+    duration: duration,
+    skippable: skippable,
+  };
+  browser.runtime.sendMessage(message);
 };
 
 const setPlayer = () => {
@@ -69,6 +64,13 @@ const setPlayer = () => {
 
   const playerObserver = new MutationObserver(playerCallback);
   playerObserver.observe(player, observerConfig);
+};
+
+const unsetPlayer = () => {
+  const video = document.getElementsByTagName("VIDEO")[0];
+  if (video) video.removeEventListener("playing");
+  const playerObserver = new MutationObserver(playerCallback);
+  playerObserver.disconnect();
 };
 
 setPlayer();

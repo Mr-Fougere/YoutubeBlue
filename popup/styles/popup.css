@@ -37,3 +37,7 @@ header {
   opacity: 0.5;
 }
 
+#error-flash{
+  color: red
+}
+
