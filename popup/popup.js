@@ -1,10 +1,3 @@
-const timeConverter = (seconds) => {
-  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return hours + "h " + minutes + "m " + remainingSeconds + "s ";
-};
-
 const totalSkipCount = document.getElementById("total-skip-count");
 const totalSkipTime = document.getElementById("total-skip-time");
 const monthUnskippableCount = document.getElementById(
@@ -13,6 +6,14 @@ const monthUnskippableCount = document.getElementById(
 const monthSkippableCount = document.getElementById("month-skippable-count");
 const averageTime = document.getElementById("average-ads-time");
 const errorDisplay = document.getElementById("error-flash");
+const adsSkipper = document.getElementById("ads-skipper");
+
+const timeConverter = (seconds) => {
+  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  return hours + "h " + minutes + "m " + remainingSeconds + "s ";
+};
 
 const fetchInformation = (month = null) => {
   return new Promise((resolve, reject) => {
@@ -58,5 +59,26 @@ const fetchMonthInformations = () => {
     });
 };
 
+const sendFeatureState = (name, state) => {
+  browser.runtime.sendMessage({
+    action: "setFeatureState",
+    name: name,
+    state: state,
+  });
+};
+
+const featureActions = () => {
+  browser.runtime
+    .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
+    .then((response) => {
+      adsSkipper.checked = response 
+    });
+
+  adsSkipper.addEventListener("click", (e) => {
+    sendFeatureState("adsSkipper", e.target.checked);
+  });
+};
+
 fetchAllInformations();
 fetchMonthInformations();
+featureActions();

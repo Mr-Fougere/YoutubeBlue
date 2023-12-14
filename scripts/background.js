@@ -3,6 +3,7 @@ const MONTH_RECAP_TABLE_NAME = "monthRecap";
 
 const dataBasePromise = indexedDB.open(DATABASE_NAME, 1);
 let dataBase, skipsData;
+let popupID;
 
 const createMonthRecapTable = (db) => {
   if (!db.objectStoreNames.contains(MONTH_RECAP_TABLE_NAME)) {
@@ -135,7 +136,6 @@ const createMonthRecap = (object) => {
 const updateCurrentMonthRecap = (object) => {
   if (!object && !dataBase) return;
 
-
   getMonthRecap(object).then((monthRecap) => {
     if (monthRecap) {
       updateMonthRecap(monthRecap, object).then(() => {
@@ -214,7 +214,7 @@ const formatData = (data, month) => {
   return generalFormat(data);
 };
 
-browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action == "newSkip") {
     updateCurrentMonthRecap(request);
   }
@@ -223,4 +223,11 @@ browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     sendResponse(formatData(skipsData, request.month));
   }
 
+  if (request.action == "getFeatureState") {
+    sendResponse(localStorage.getItem(request.name) === "true");
+  }
+
+  if (request.action == "setFeatureState") {
+    localStorage.setItem(request.name, request.state);
+  }
 });

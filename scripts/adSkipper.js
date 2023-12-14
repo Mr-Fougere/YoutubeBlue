@@ -1,13 +1,13 @@
-const observerConfig = { childList: true, subtree: true };
-const skipCountName = "youSkipCount";
-const targetMutationClassList = "video-ads ytp-ad-module";
-const skipButtonClassList = "ytp-ad-skip-button-slot";
-const doubleSkipButtonClassList =
-  "ytp-ad-skip-button-container ytp-ad-skip-button-container-detached";
-const DEFAULT_AD_TIME = 5; // in seconds
-let videoTryCount = 0;
-let playerTryCount = 0;
-let adsSkipperEnabled = true;
+const observerConfig = { childList: true, subtree: true },
+  skipCountName = "youSkipCount",
+  targetMutationClassList = "video-ads ytp-ad-module",
+  skipButtonClassList = "ytp-ad-skip-button-slot",
+  doubleSkipButtonClassList =
+    "ytp-ad-skip-button-container ytp-ad-skip-button-container-detached",
+  DEFAULT_AD_TIME = 5; // in seconds
+let videoTryCount = 0,
+  playerTryCount = 0,
+  playerObserver;
 
 const forwardAdVideo = () => {
   const video = document.getElementsByTagName("VIDEO")[0];
@@ -32,8 +32,6 @@ const checkDoubleSkipAd = () => {
 };
 
 const skipAd = () => {
-  if (!adsSkipperEnabled) return;
-
   const adPlayer = document.getElementsByClassName(
     "ytp-ad-player-overlay-skip-or-preview"
   )[0];
@@ -80,15 +78,28 @@ const setPlayer = () => {
 
   video.addEventListener("playing", () => setTimeout(() => skipAd(), 250));
 
-  const playerObserver = new MutationObserver(playerCallback);
+  playerObserver = new MutationObserver(playerCallback);
   playerObserver.observe(player, observerConfig);
 };
 
 const unsetPlayer = () => {
-  const video = document.getElementsByTagName("VIDEO")[0];
-  if (video) video.removeEventListener("playing");
-  const playerObserver = new MutationObserver(playerCallback);
-  playerObserver.disconnect();
+  try {
+    const video = document.getElementsByTagName("VIDEO")[0];
+    if (video)
+      video.removeEventListener("playing", () =>
+        setTimeout(() => skipAd(), 250)
+      );
+    playerObserver.disconnect();
+  } catch (error) {}
 };
 
-setPlayer();
+const launch = () => {
+  browser.runtime
+    .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
+    .then((response) => {
+      if (response) setPlayer();
+      else unsetPlayer();
+    });
+};
+
+launch();

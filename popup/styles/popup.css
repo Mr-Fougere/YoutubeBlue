@@ -1,6 +1,9 @@
 html,
 body {
   font-family: "Roboto", sans-serif;
+  width: 200px;
+  height: 350px;
+  overflow:hidden;
 }
 
 img {
