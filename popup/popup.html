@@ -1,23 +1,114 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="styles/variables.css" />
+    <link rel="stylesheet" href="styles/popup.css" />
+    <link rel="stylesheet" href="styles/section-title.css" />
+    <link rel="stylesheet" href="styles/section-content.css" />
+    <link rel="stylesheet" href="styles/bool-switch.css" />
+
   </head>
 
   <body>
-    <p>Total skips <span id="total-skip-count"> 0 </span> ads</p>
-    <p>Total time gained <span id="total-skip-time"> 0s </span></p>
-    <p>This month</p>
-    <p>Ad skippable : <span id="month-skippable-count"> 0 </span></p>
-    <p>Ad unskippable :<span id="month-unskippable-count"> 0 </span></p>
-    <p>Time gained : <span id="month-skip-time"> 0s </span></p>
-    <p>Average skip time : <span id="month-average-time"> 0s </span></p>
+    <header>
+      <div id="logo">
+        <img class="logo-image" src="../assets/images/logo.png" />
+        <span class="logo-name">YouSkip</span>
+      </div>
 
-    <label for="storage-version"> Advanced Version</label>
-    <input id="storage-version" type="checkbox" name="storage-version" />
-    <label for="storage-version"> Version Lite</label>
-    <p>Changing your version reset your data</p>
-    <p>Thanks to YouSkip</p>
+      <div id="version">
+        <span class="version-index">v0.1.3</span>
+        <a class="version-link" href="https://github.com/Mr-Fougere/youSkip">
+          <img class="github-icon" src="../assets/images/github.png" />
+        </a>
+      </div>
+    </header>
+
+    <div class="sections">
+      <div class="section">
+        <div class="section-title">
+          <span class="section-name">Full Recap</span>
+          <div class="section-divider"></div>
+        </div>
+        <div class="section-content">
+          <div class="section-content-item">
+            <img
+              class="section-content-item-icon"
+              src="../assets/images/skips.png"
+            />
+            <span class="section-content-item-value" id="total-skips-count"
+              >0</span
+            >
+            <span class="section-content-item-name">Skipped Ads</span>
+          </div>
+          <div class="section-content-item">
+            <img
+              class="section-content-item-icon"
+              src="../assets/images/time.png"
+            />
+            <span class="section-content-item-value" id="total-skip-time"
+              >0h 0m 0s</span
+            >
+            <span class="section-content-item-name">Ads time</span>
+          </div>
+          <div class="section-content-item">
+            <img
+              class="section-content-item-icon"
+              src="../assets/images/ads.png"
+            />
+            <span class="section-content-item-value" id="average-ads-time"
+              >0s</span
+            >
+            <span class="section-content-item-name">Average ads time</span>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">
+          <span class="section-name">Month Recap</span>
+          <div class="section-divider"></div>
+        </div>
+        <div class="section-content">
+          <div class="section-content-item">
+            <img
+              class="section-content-item-icon"
+              src="../assets/images/clickable-ads.png"
+            />
+            <span class="section-content-item-value" id="month-skippable-count"
+              >0</span
+            >
+            <span class="section-content-item-name">Skippable Ads Skips</span>
+          </div>
+          <div class="section-content-item">
+            <img
+              class="section-content-item-icon"
+              src="../assets/images/waiting-ads.png"
+            />
+            <span
+              class="section-content-item-value"
+              id="month-unskippable-count"
+              >0</span
+            >
+            <span class="section-content-item-name">Unskippable Ads Skips</span>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">
+          <span class="section-name">Features</span>
+          <div class="section-divider"></div>
+        </div>
+        <div class="section-content">
+          <div class="section-content-action">
+            <div class="bool-switch-block">
+              <input class="bool-switch__checkbox"id="ads-skipper" type="checkbox" name="ads-skipper" />
+              <label class="bool-switch__label" for="ads-skipper"></label>
+            </div>
+            <label class="section-content-action-name" for="ads-skipper"> Ads Skipper</label>
+          </div>
+        </div>
+      </div>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>

@@ -24,7 +24,7 @@ const fetchGeneralInformations = () => {
       version: currentStorageVersion,
     })
     .then(function (response) {
-      const totalSkipCount = document.getElementById("total-skip-count");
+      const totalSkipCount = document.getElementById("total-skips-count");
       const totalSkipTime = document.getElementById("total-skip-time");
       const { count, time } = response;
       totalSkipCount.textContent = count;

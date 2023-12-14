@@ -1,0 +1,38 @@
+html,
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+img {
+  width: 35px;
+  height: 35px;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logo,
+#version {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#logo img,#version img{
+  width: 25px;
+  height: 25px;
+}
+
+#logo .logo-image,#version .version-index{
+  margin-right: 5px;
+}
+
+.github-icon{
+  opacity: 0.5;
+}
+

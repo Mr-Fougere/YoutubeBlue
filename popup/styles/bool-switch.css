@@ -1,0 +1,50 @@
+.bool-switch__block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .bool-switch__checkbox {
+    display: none;
+  }
+  
+  .bool-switch__checkbox:not(:checked) + label {
+    background-color: var(--item-text-color);
+  }
+  
+  .bool-switch__checkbox:not(:checked) + label::after {
+    left: calc(100% - 0.31rem);
+    transform: translateX(-100%);
+  }
+
+  
+  .bool-switch__label {
+    cursor: pointer;
+    height: 2rem;
+    width: 4rem;
+    background-color: var(--disabled-background);
+    border-radius: 1.1rem;
+    display: block;
+    position: relative;
+    transition: 300ms;
+    color: transparent;
+    user-select: none;
+  }
+  
+  .bool-switch__label::after {
+    content: '';
+    position: absolute;
+    height: 1.5rem;
+    width: 1.5rem;
+    top: 0.25rem;
+    left: 0.31rem;
+    border-radius: 1.1rem;
+    background-color: white;
+    transition: 300ms;
+  }
+  
+  .bool-switch__label:active::after {
+    width: 2rem;
+  }
+  

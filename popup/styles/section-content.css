@@ -1,0 +1,35 @@
+.section-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.section-content-item {
+  width: max-content;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.section-content-item-icon {
+  margin-right: 5px;
+}
+.section-content-item-value {
+  margin-right: 5px;
+  color: var(--item-text-color);
+  font-weight: bold;
+}
+
+.section-content-item-name {
+  color: var(--item-value-color);
+}
+
+.section-content-action{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.section-content-action-name{
+  margin-left: 5px;
+  color: var(--item-value-color);
+}
