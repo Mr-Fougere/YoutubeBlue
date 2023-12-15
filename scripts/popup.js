@@ -6,8 +6,9 @@ const monthUnskippableCount = document.getElementById(
 const monthSkippableCount = document.getElementById("month-skippable-count");
 const averageTime = document.getElementById("average-ads-time");
 const errorDisplay = document.getElementById("error-flash");
-const adsSkipper = document.getElementById("ads-skipper");
 const versionName = document.getElementById("version-name");
+
+const features = ["ads-skipper", "resolution-blur"];
 
 const timeConverter = (seconds) => {
   const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -62,12 +63,18 @@ const fetchMonthInformations = () => {
     });
 };
 
-const refreshYoutubeTabs = () => {
-  chrome.tabs.query({ currentWindow: true }, function (tabs) {
-    const youtubeTabs = tabs.filter((tab) => tab.url.includes("youtube.com/watch?v="));
-    youtubeTabs.forEach((tab) => {
-      chrome.tabs.reload(tab.id);
-    });
+const updateTabs = (name, state) => {
+  browser.tabs.query({ currentWindow: true }).then((tabs) => {
+    tabs
+      .filter((tab) => tab.url.includes("youtube.com/watch?v="))
+      .forEach((tab) => {
+        console.log(tab);
+        browser.tabs.sendMessage(tab.id, {
+          action: "updateFeatureState",
+          name: name,
+          state: state,
+        });
+      });
   });
 };
 
@@ -77,18 +84,25 @@ const sendFeatureState = (name, state) => {
     name: name,
     state: state,
   });
-  refreshYoutubeTabs();
+
+  updateTabs(name,state);
 };
 
 const featureActions = () => {
-  browser.runtime
-    .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
-    .then((response) => {
-      adsSkipper.checked = response;
-    });
+  features.forEach((feature) => {
+    const featureElement = document.getElementById(feature);
+    browser.runtime
+      .sendMessage({
+        action: "getFeatureState",
+        name: featureElement.dataset.feature,
+      })
+      .then((response) => {
+        featureElement.checked = response;
+      });
 
-  adsSkipper.addEventListener("change", (e) => {
-    sendFeatureState("adsSkipper", e.target.checked);
+    featureElement.addEventListener("change", (e) => {
+      sendFeatureState(e.target.dataset.feature, e.target.checked);
+    });
   });
 };
 

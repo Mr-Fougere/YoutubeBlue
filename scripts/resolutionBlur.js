@@ -68,10 +68,52 @@ const changeVideoLastResolution = () => {
   }, focusTimeOut);
 };
 
-window.addEventListener("focus", function () {
-  changeVideoLastResolution();
-});
+const setWindowListeners = () => {
+  window.addEventListener("focus", function () {
+    changeVideoLastResolution();
+  });
 
-window.addEventListener("blur", function () {
-  changeVideoLowResolution();
-});
+  window.addEventListener("blur", function () {
+    changeVideoLowResolution();
+  });
+
+  onBlur = false;
+};
+
+const unsetWindowListeners = () => {
+  window.removeEventListener("focus", function () {
+    changeVideoLastResolution();
+  });
+
+  window.removeEventListener("blur", function () {
+    changeVideoLowResolution();
+  });
+
+  onBlur = true;
+  changeVideoLastResolution();
+};
+
+const updaterBlurListeners = () => {
+  browser.runtime.onMessage.addListener((request) => {
+    console.log(request);
+    if (
+      request.action === "updateFeatureState" &&
+      request.name === "resolutionBlur"
+    ) {
+      if (request.state) setWindowListeners();
+      else unsetWindowListeners();
+    }
+  });
+};
+
+const launchResolutionBlur = () => {
+  browser.runtime
+    .sendMessage({ action: "getFeatureState", name: "resolutionBlur" })
+    .then((response) => {
+      if (response) setWindowListeners();
+    });
+
+    updaterBlurListeners();
+};
+
+launchResolutionBlur();

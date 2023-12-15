@@ -93,13 +93,28 @@ const unsetPlayer = () => {
   } catch (error) {}
 };
 
-const launch = () => {
+const updaterSkipperListeners = () => {
+  browser.runtime.onMessage.addListener((request) => {
+    console.log(request);
+    if (
+      request.action === "updateFeatureState" &&
+      request.name === "adsSkipper"
+    ) {
+      if (request.state) setPlayer();
+      else unsetPlayer();
+    }
+  });
+};
+
+const launchAdSkipper = () => {
   browser.runtime
     .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
     .then((response) => {
       if (response) setPlayer();
       else unsetPlayer();
     });
+
+  updaterSkipperListeners();
 };
 
-launch();
+launchAdSkipper();

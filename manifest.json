@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "YoutubeBlue",
-  "version": "0.2.3",
-  "version_name": "0.2.3-beta",
+  "version": "0.2.4",
+  "version_name": "0.2.4-beta",
   "author": "Mr-Fougere",
   "description": "YoutubeBlue is a browser extension with features to improve use of YouTube ",
   "permissions": ["storage", "tabs"],
