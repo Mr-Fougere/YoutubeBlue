@@ -64,14 +64,17 @@ const newBlurTime = (resolution) => {
   return blurUuid;
 };
 
+const blurSaving = (blur) => {
+    return Math.round(blur.time * RESOLUTION_CONSOMMATION[blur.resolution]);
+}
+
 const stopBlurTime = (uuid, abrupt = false) => {
   if (!blurTime[uuid]) return;
   console.log(blurTime[uuid]);
 
   blurTime[uuid].time = blurTime[uuid].time - (abrupt ? 0 : 5);
   clearInterval(blurTime[uuid].interval);
-  blurTime[uuid].data =
-    blurTime[uuid].time * RESOLUTION_CONSOMMATION[blurTime[uuid].resolution];
+  blurTime[uuid].data = blurSaving(blurTime[uuid])
   console.log(blurTime[uuid]);
   delete blurTime[uuid];
 };

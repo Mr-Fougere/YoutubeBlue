@@ -33,6 +33,10 @@
     {
       "matches": ["*://www.youtube.com/watch?*"],
       "js": ["scripts/adSkipper.js","scripts/resolutionBlur.js"]
+    },
+    {
+      "matches": ["*://www.youtube.com/*"],
+      "css": ["assets/styles/bluetify.css"]
     }
   ],
   "browser_specific_settings": {
