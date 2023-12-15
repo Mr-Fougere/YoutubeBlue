@@ -68,7 +68,6 @@ const updateTabs = (name, state) => {
     tabs
       .filter((tab) => tab.url.includes("youtube.com/watch?v="))
       .forEach((tab) => {
-        console.log(tab);
         browser.tabs.sendMessage(tab.id, {
           action: "updateFeatureState",
           name: name,

@@ -95,7 +95,6 @@ const unsetPlayer = () => {
 
 const updaterSkipperListeners = () => {
   browser.runtime.onMessage.addListener((request) => {
-    console.log(request);
     if (
       request.action === "updateFeatureState" &&
       request.name === "adsSkipper"

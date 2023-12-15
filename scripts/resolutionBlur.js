@@ -95,7 +95,6 @@ const unsetWindowListeners = () => {
 
 const updaterBlurListeners = () => {
   browser.runtime.onMessage.addListener((request) => {
-    console.log(request);
     if (
       request.action === "updateFeatureState" &&
       request.name === "resolutionBlur"
