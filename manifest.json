@@ -1,14 +1,14 @@
 {
   "manifest_version": 3,
-  "name": "YoutubeBlue",
+  "name": "YouTubeBlue",
   "version": "0.2.4",
   "version_name": "0.2.4-beta",
   "author": "Mr-Fougere",
-  "description": "YoutubeBlue is a browser extension with features to improve use of YouTube ",
+  "description": "YouTubeBlue is a browser extension with features to improve use of YouTube ",
   "permissions": ["storage", "tabs"],
   "update_url": "https://github.com/Mr-Fougere/youSkip",
   "background": {
-    "scripts": ["scripts/background.js"]
+    "scripts": ["scripts/background.js","scripts/backBlur.js"]
   },
   "icons": {
     "48": "assets/icons/logo48.png",
@@ -25,7 +25,7 @@
       "128": "assets/icons/logo128.png",
       "256": "assets/icons/logo256.png"
     },
-    "default_title": "YoutubeBlue",
+    "default_title": "YouTubeBlue",
     "default_popup": "views/popup.html"
   },
 

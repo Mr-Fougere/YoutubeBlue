@@ -2,7 +2,7 @@ const resolutionStorageName = "currentResolution";
 const blurTimeOut = 5000,
   focusTimeOut = 2500;
 let onBlur = false;
-let updateResolution;
+let updateResolution, uuid;
 
 const getCurrentResolutionIndex = (resolutionList) => {
   const resolutionArray = Array.from(resolutionList);
@@ -55,6 +55,7 @@ const changeVideoLowResolution = () => {
     openQualitySettings();
     setQualityResolution();
     onBlur = true;
+    beginBlurTime();
   }, blurTimeOut);
 };
 
@@ -65,6 +66,7 @@ const changeVideoLastResolution = () => {
     openQualitySettings();
     setQualityResolution(fetchCurrentResolutionIndex());
     onBlur = false;
+    endBlurTime();
   }, focusTimeOut);
 };
 
@@ -94,7 +96,7 @@ const unsetWindowListeners = () => {
 };
 
 const updaterBlurListeners = () => {
-  browser.runtime.onMessage.addListener((request) => {
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (
       request.action === "updateFeatureState" &&
       request.name === "resolutionBlur"
@@ -102,6 +104,28 @@ const updaterBlurListeners = () => {
       if (request.state) setWindowListeners();
       else unsetWindowListeners();
     }
+
+    if (request.action === "checkBlur") {
+      sendResponse({ uuid: uuid });
+    }
+  });
+};
+
+const beginBlurTime = () => {
+  browser.runtime
+    .sendMessage({
+      action: "beginBlur",
+      resolution: "720p",
+    })
+    .then((response) => {
+      uuid = response.uuid;
+    });
+};
+
+const endBlurTime = () => {
+  browser.runtime.sendMessage({
+    action: "endBlur",
+    uuid: uuid,
   });
 };
 
@@ -112,7 +136,7 @@ const launchResolutionBlur = () => {
       if (response) setWindowListeners();
     });
 
-    updaterBlurListeners();
+  updaterBlurListeners();
 };
 
 launchResolutionBlur();

@@ -3,7 +3,6 @@ const MONTH_RECAP_TABLE_NAME = "monthRecap";
 
 const dataBasePromise = indexedDB.open(DATABASE_NAME, 1);
 let dataBase, skipsData;
-let popupID;
 
 const createMonthRecapTable = (db) => {
   if (!db.objectStoreNames.contains(MONTH_RECAP_TABLE_NAME)) {
@@ -33,6 +32,7 @@ const nourrishData = () => {
 
   informations.then((response) => {
     skipsData = response;
+    console.log(skipsData);
   });
 };
 
@@ -178,12 +178,8 @@ const monthlyFormat = (data, month) => {
     };
 
   const monthData = data.filter((item) => item.month === month);
-  const unskippableData = monthData.find(
-    (item) => item.type === "unskippable"
-  );
-  const skippableData = monthData.find(
-    (item) => item.type === "skippable"
-  );
+  const unskippableData = monthData.find((item) => item.type === "unskippable");
+  const skippableData = monthData.find((item) => item.type === "skippable");
   const unskippableCount = unskippableData ? unskippableData.count : 0;
   const skippableCount = skippableData ? skippableData.count : 0;
 
@@ -217,6 +213,7 @@ const formatData = (data, month) => {
 };
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log(request);
   if (request.action == "newSkip") {
     updateCurrentMonthRecap(request);
   }
