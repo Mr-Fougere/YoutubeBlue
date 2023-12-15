@@ -1,10 +1,15 @@
+const resolutionStorageName = "currentResolution";
+const blurTimeOut = 5000,
+  focusTimeOut = 2500;
+let onBlur = false;
+let updateResolution;
+
 const getCurrentResolutionIndex = (resolutionList) => {
   const resolutionArray = Array.from(resolutionList);
-  const currentResolution = resolutionArray.find((resolution) => {
-    const ariaCheckedValue = resolution.getAttribute("aria-checked");
-    return ariaCheckedValue === "true";
+  const resolutionIndex = resolutionArray.findIndex((resolution, index) => {
+    return resolution.getAttribute("aria-checked") === "true";
   });
-  return resolutionArray.indexOf(currentResolution);
+  return resolutionIndex;
 };
 
 const setCurrentResolutionIndex = (currentResolutionIndex) => {
@@ -13,49 +18,54 @@ const setCurrentResolutionIndex = (currentResolutionIndex) => {
 
 const fetchCurrentResolutionIndex = () => {
   const currentResolution = localStorage.getItem(resolutionStorageName);
-  if (!currentResolution) return null;
+  if (!currentResolution) return 1;
   return parseInt(currentResolution);
 };
 
-const changeVideoLowResolution = () => {
-  const settingButton = document.getElementsByClassName(
-    "ytp-button ytp-settings-button"
-  )[0];
+const openQualitySettings = () => {
+  const resolutionList = document.querySelectorAll(
+    ".ytp-menuitem[role=menuitemradio]"
+  );
+  if (resolutionList.length > 0) return;
+
+  const settingButton = document.querySelector(
+    "button.ytp-button.ytp-settings-button"
+  );
   settingButton.click();
-  const settingsList = document.getElementsByClassName("ytp-menuitem");
+
+  const settingsList = document.querySelectorAll(".ytp-menuitem");
   settingsList[settingsList.length - 1].click();
-  setTimeout(() => {
-    const resolutionList =
-      document.getElementById("ytp-id-18").children[0].children[1].children;
-    const currentResolutionIndex = getCurrentResolutionIndex(resolutionList);
-    setCurrentResolutionIndex(currentResolutionIndex);
-    const lowResolutionIndex = resolutionList.length - 2;
-    const lowResolutionButton = resolutionList[lowResolutionIndex];
-    lowResolutionButton.click();
-  }, 2000);
+};
+
+const setQualityResolution = (index = false) => {
+  const resolutionList = document.querySelectorAll(
+    ".ytp-menuitem[role=menuitemradio]"
+  );
+  const currentResolutionIndex = getCurrentResolutionIndex(resolutionList);
+  setCurrentResolutionIndex(currentResolutionIndex);
+  if (!index) index = resolutionList.length - 2;
+  const newResolution = resolutionList[index];
+  newResolution.click();
+};
+
+const changeVideoLowResolution = () => {
+  clearTimeout(updateResolution);
+  if (onBlur) return;
+  updateResolution = setTimeout(() => {
+    openQualitySettings();
+    setQualityResolution();
+    onBlur = true;
+  }, blurTimeOut);
 };
 
 const changeVideoLastResolution = () => {
-  let resolutionList = null;
-  const settingButton = document.getElementsByClassName(
-    "ytp-button ytp-settings-button"
-  )[0];
-  settingButton.click();
-  const settingsList = document.getElementsByClassName("ytp-menuitem");
-  console.log(settingsList);
-  if (settingsList[0].role == "menuitemcheckbox")
-    resolutionList == settingsList;
-  console.log(resolutionList);
-  if (!resolutionList) {
-    settingsList[settingsList.length - 1].click();
-    resolutionList =
-      document.getElementById("ytp-id-18").children[0].children[1].children;
-  }
-  let currentResolution = fetchCurrentResolutionIndex(resolutionList);
-  if (!currentResolution) currentResolution = resolutionList.length - 1;
-  console.log(currentResolution);
-  console.log(resolutionList);
-  resolutionList[currentResolution].click();
+  clearTimeout(updateResolution);
+  if (!onBlur) return;
+  updateResolution = setTimeout(() => {
+    openQualitySettings();
+    setQualityResolution(fetchCurrentResolutionIndex());
+    onBlur = false;
+  }, focusTimeOut);
 };
 
 window.addEventListener("focus", function () {

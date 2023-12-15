@@ -2,7 +2,6 @@ html,
 body {
   font-family: "Roboto", sans-serif;
   width: 200px;
-  height: 350px;
   overflow: hidden;
 }
 
@@ -41,6 +40,11 @@ header {
 
 #version {
   opacity: 0.5;
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
 }
 
 body:has(#ads-skipper:not(:checked)) .ads {
