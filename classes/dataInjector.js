@@ -46,16 +46,16 @@ class DataInjector extends DatabaseEngine {
   _adsSkipUpdate(adsSkip, object) {
     return {
       ...adsSkip,
-      data: adsSkip.count + object.data,
-      time: adsSkip.time + object.time,
+      count: adsSkip.count + 1,
+      time: adsSkip.time + object.duration,
     };
   }
 
   _blurTimeUpdate(blurTime, object) {
     return {
       ...blurTime,
-      count: blurTime.count + 1,
-      time: blurTime.time + object.duration,
+      data: blurTime.data + object.data,
+      time: blurTime.time + object.time,
     };
   }
 
@@ -70,7 +70,7 @@ class DataInjector extends DatabaseEngine {
         }
       };
 
-      this.updateItem(corresponItem.id, _updateItem, this.dataTable)
+      this.updateItem(corresponItem.id, _updateItem(), this.dataTable)
         .then(() => {
           resolve();
         })

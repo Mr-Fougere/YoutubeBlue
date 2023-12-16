@@ -28,7 +28,8 @@ const fetchInformation = () => {
 const fetchAllInformations = () => {
   fetchInformation()
     .then((response) => {
-      console.log(response);
+      if (!response) return;
+
       const {
         time,
         averageAdsTime,
@@ -38,6 +39,7 @@ const fetchAllInformations = () => {
         blurTime,
         dataSaved,
       } = response;
+      
       if (
         time == 0 &&
         averageAdsTime == 0 &&

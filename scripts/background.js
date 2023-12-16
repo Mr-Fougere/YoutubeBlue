@@ -17,9 +17,7 @@ const setup = async () => {
 };
 
 const pullItems = async () => {
-  console.log("pulling items");
-  dbEngine.openDB();
-  allData = await dbEngine.getAllItems();
+  dbEngine.openDB().then(async () => (allData = await dbEngine.getAllItems()));
 };
 
 const setMessageListeners = () => {
