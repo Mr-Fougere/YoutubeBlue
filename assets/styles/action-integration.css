@@ -1,0 +1,7 @@
+button.ytp-ads-button[aria-enabled="true"] svg  g:last-child path {
+    fill: white
+}
+
+button.ytp-ads-button[aria-enabled="true"] svg  g:first-child path {
+    fill: darkgrey
+}

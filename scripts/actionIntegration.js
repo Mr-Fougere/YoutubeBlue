@@ -1,8 +1,8 @@
-const createResolutionBlurCheckbox = () => {
+const createResolutionBlurCheckbox = (checked) => {
   const resolutionBlurCheckbox = document.createElement("div");
   resolutionBlurCheckbox.className = "ytp-menuitem";
   resolutionBlurCheckbox.setAttribute("role", "menuitemcheckbox");
-  resolutionBlurCheckbox.setAttribute("aria-checked", "true");
+  resolutionBlurCheckbox.setAttribute("aria-checked", checked);
   resolutionBlurCheckbox.setAttribute("tabindex", "0");
   resolutionBlurCheckbox.setAttribute("id", "resolution-blur");
 
@@ -36,14 +36,14 @@ const displayTooltipText = (button) => {
   tooltipText.innerText = title;
 };
 
-const createAdSkipper = () => {
+const createAdSkipper = (enabled) => {
   const adSkipperButton = document.createElement("button");
   adSkipperButton.className = "ytp-ads-button ytp-button";
   adSkipperButton.setAttribute("aria-keyshortcuts", "a");
   adSkipperButton.setAttribute("data-priority", "11");
   adSkipperButton.setAttribute("data-tooltip-target-id", "ytp-ads-button");
   adSkipperButton.setAttribute("data-title-no-tooltip", "Ads Skipper");
-  adSkipperButton.setAttribute("aria-pressed", "false");
+  adSkipperButton.setAttribute("aria-enabled", enabled);
   adSkipperButton.setAttribute("aria-label", "Ads Skipper Keyshortcut a");
   adSkipperButton.setAttribute("title", "Ads Skipper (a)");
 
@@ -101,11 +101,27 @@ const createAdSkipper = () => {
     adSkipperButton.setAttribute("title", "Ads Skipper (a)");
     if (tooltip) tooltip.style.display = "none";
   });
+
+  adSkipperButton.addEventListener("click", () => {
+    const adSkipperButtonPressed = adSkipperButton.getAttribute("aria-enabled");
+    const newStatus = adSkipperButtonPressed !== "true";
+
+    adSkipperButton.setAttribute("aria-enabled", newStatus);
+    if (newStatus) setPlayer();
+    else unsetPlayer();
+  });
+
   adSkipperButton.appendChild(svgElement);
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "a") {
+      adSkipperButton.click();
+    }
+  });
+
   return adSkipperButton;
 };
 
-const addResolutionBlurCheckbox = () => {
+const addResolutionBlurCheckbox = (checked) => {
   const settingMenu = document.querySelector(
     ".ytp-popup.ytp-settings-menu .ytp-panel-menu"
   );
@@ -117,42 +133,56 @@ const addResolutionBlurCheckbox = () => {
 
   if (settingMenu.querySelector("#resolution-blur")) return;
 
-  const resolutionBlurCheckbox = createResolutionBlurCheckbox();
+  const resolutionBlurCheckbox = createResolutionBlurCheckbox(checked);
 
   resolutionBlurCheckbox.addEventListener("click", () => {
-    resolutionBlurCheckbox.setAttribute(
-      "aria-checked",
-      resolutionBlurCheckbox.getAttribute("aria-checked") === "true"
-        ? "false"
-        : "true"
-    );
+    const adSkipperButtonChecked =
+      resolutionBlurCheckbox.getAttribute("aria-checked");
+    const newStatus = adSkipperButtonChecked !== "true";
+
+    resolutionBlurCheckbox.setAttribute("aria-checked", newStatus);
+    if (newStatus) setWindowListeners();
+    else unsetWindowListeners();
   });
+
+  if(checked) setWindowListeners();
 
   settingMenu.prepend(resolutionBlurCheckbox);
 };
 
-const addAdsSkipButton = () => {
+const addAdsSkipButton = (enabled) => {
   const rightControls = document.querySelector(".ytp-right-controls");
   if (rightControls.querySelector(".ytp-ads-button")) return;
-  const adsSkipButton = createAdSkipper();
+  const adsSkipButton = createAdSkipper(enabled);
+  if (enabled) setPlayer();
   rightControls.prepend(adsSkipButton);
 };
 
 const integrateButtons = () => {
   const player = document.querySelector(".html5-video-player");
-  player.addEventListener("mouseenter", () => {
-    addAdsSkipButton();
-  });
+
+  browser.runtime
+    .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
+    .then((response) => {
+      addAdsSkipButton(response);
+      player.addEventListener("mousehover", () => {
+        addAdsSkipButton(response);
+      });
+    });
 
   const settingsButton = document.querySelector(
     "button.ytp-button.ytp-settings-button"
   );
 
-  settingsButton.addEventListener("click", () => {
-    setTimeout(() => {
-      addResolutionBlurCheckbox();
-    }, 100);
-  });
+  browser.runtime
+    .sendMessage({ action: "getFeatureState", name: "resolutionBlur" })
+    .then((response) => {
+      settingsButton.addEventListener("click", () => {
+        setTimeout(() => {
+          addResolutionBlurCheckbox(response);
+        }, 100);
+      });
+    });
 };
 
 integrateButtons();

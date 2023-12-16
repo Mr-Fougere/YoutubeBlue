@@ -32,7 +32,6 @@ const nourrishData = () => {
 
   informations.then((response) => {
     skipsData = response;
-    console.log(skipsData);
   });
 };
 
@@ -213,7 +212,6 @@ const formatData = (data, month) => {
 };
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log(request);
   if (request.action == "newSkip") {
     updateCurrentMonthRecap(request);
   }

@@ -70,6 +70,15 @@ const changeVideoLastResolution = () => {
   }, focusTimeOut);
 };
 
+const sendResolutionBlurStatus = (state) => {
+  console.log(state);
+  browser.runtime.sendMessage({
+    action: "setFeatureState",
+    name: "resolutionBlur",
+    state: state,
+  });
+}
+
 const setWindowListeners = () => {
   window.addEventListener("focus", function () {
     changeVideoLastResolution();
@@ -80,6 +89,8 @@ const setWindowListeners = () => {
   });
 
   onBlur = false;
+  console.log("setWindowListeners");
+  sendResolutionBlurStatus(true);
 };
 
 const unsetWindowListeners = () => {
@@ -92,19 +103,12 @@ const unsetWindowListeners = () => {
   });
 
   onBlur = true;
-  changeVideoLastResolution();
+  console.log("unsetWindowListeners");
+  sendResolutionBlurStatus(false);
 };
 
 const updaterBlurListeners = () => {
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (
-      request.action === "updateFeatureState" &&
-      request.name === "resolutionBlur"
-    ) {
-      if (request.state) setWindowListeners();
-      else unsetWindowListeners();
-    }
-
     if (request.action === "checkBlur") {
       sendResponse({ uuid: uuid });
     }
@@ -129,14 +133,5 @@ const endBlurTime = () => {
   });
 };
 
-const launchResolutionBlur = () => {
-  browser.runtime
-    .sendMessage({ action: "getFeatureState", name: "resolutionBlur" })
-    .then((response) => {
-      if (response) setWindowListeners();
-    });
+updaterBlurListeners();
 
-  updaterBlurListeners();
-};
-
-//launchResolutionBlur();

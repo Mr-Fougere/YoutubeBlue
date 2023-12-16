@@ -8,7 +8,6 @@ const averageTime = document.getElementById("average-ads-time");
 const errorDisplay = document.getElementById("error-flash");
 const versionName = document.getElementById("version-name");
 
-const features = ["ads-skipper", "resolution-blur"];
 
 const timeConverter = (seconds) => {
   const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -63,54 +62,10 @@ const fetchMonthInformations = () => {
     });
 };
 
-const updateTabs = (name, state) => {
-  browser.tabs.query({ currentWindow: true }).then((tabs) => {
-    tabs
-      .filter((tab) => tab.url.includes("youtube.com/watch?v="))
-      .forEach((tab) => {
-        console.log(tab);
-        browser.tabs.sendMessage(tab.id, {
-          action: "updateFeatureState",
-          name: name,
-          state: state,
-        });
-      });
-  });
-};
-
-const sendFeatureState = (name, state) => {
-  browser.runtime.sendMessage({
-    action: "setFeatureState",
-    name: name,
-    state: state,
-  });
-
-  updateTabs(name,state);
-};
-
-const featureActions = () => {
-  features.forEach((feature) => {
-    const featureElement = document.getElementById(feature);
-    browser.runtime
-      .sendMessage({
-        action: "getFeatureState",
-        name: featureElement.dataset.feature,
-      })
-      .then((response) => {
-        featureElement.checked = response;
-      });
-
-    featureElement.addEventListener("change", (e) => {
-      sendFeatureState(e.target.dataset.feature, e.target.checked);
-    });
-  });
-};
-
 const setVersionName = () => {
   versionName.textContent = "v" + browser.runtime.getManifest().version_name;
 };
 
 setVersionName();
-featureActions();
 fetchAllInformations();
 fetchMonthInformations();

@@ -35,7 +35,6 @@ const checkBlurOn = (uuid) => {
           }
         })
         .catch(() => {
-          console.log("blur off");
           stopBlurTime(uuid, true);
         });
     });

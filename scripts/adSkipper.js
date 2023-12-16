@@ -61,6 +61,14 @@ const addNewSkip = (skippable, duration) => {
   browser.runtime.sendMessage(message);
 };
 
+const sendAdsSkipperStatus = (state) => {
+  browser.runtime.sendMessage({
+    action: "setFeatureState",
+    name: "adsSkipper",
+    state: state,
+  });
+}
+
 const setPlayer = () => {
   const player = document.getElementById("player");
   if (!player) {
@@ -80,6 +88,7 @@ const setPlayer = () => {
 
   playerObserver = new MutationObserver(playerCallback);
   playerObserver.observe(player, observerConfig);
+  sendAdsSkipperStatus(true)
 };
 
 const unsetPlayer = () => {
@@ -90,30 +99,6 @@ const unsetPlayer = () => {
         setTimeout(() => skipAd(), 250)
       );
     playerObserver.disconnect();
+    sendAdsSkipperStatus(false)
   } catch (error) {}
 };
-
-const updaterSkipperListeners = () => {
-  browser.runtime.onMessage.addListener((request) => {
-    if (
-      request.action === "updateFeatureState" &&
-      request.name === "adsSkipper"
-    ) {
-      if (request.state) setPlayer();
-      else unsetPlayer();
-    }
-  });
-};
-
-const launchAdSkipper = () => {
-  browser.runtime
-    .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
-    .then((response) => {
-      if (response) setPlayer();
-      else unsetPlayer();
-    });
-
-  updaterSkipperListeners();
-};
-
-launchAdSkipper();
