@@ -3,13 +3,16 @@ const blurTimeOut = 5000,
   focusTimeOut = 2500;
 let onBlur = false;
 let updateResolution, uuid;
+let disabled = true;
 
-const getCurrentResolutionIndex = (resolutionList) => {
+const getCurrentResolution = (resolutionList) => {
   const resolutionArray = Array.from(resolutionList);
-  const resolutionIndex = resolutionArray.findIndex((resolution, index) => {
+  let resolutionIndex;
+  const resolution = resolutionArray.find((resolution, index) => {
+    resolutionIndex = index;
     return resolution.getAttribute("aria-checked") === "true";
   });
-  return resolutionIndex;
+  return { resolution, resolutionIndex };
 };
 
 const setCurrentResolutionIndex = (currentResolutionIndex) => {
@@ -37,91 +40,90 @@ const openQualitySettings = () => {
   settingsList[settingsList.length - 1].click();
 };
 
-const setQualityResolution = (index = false) => {
+const setQualityResolution = (index = -1) => {
   const resolutionList = document.querySelectorAll(
     ".ytp-menuitem[role=menuitemradio]"
   );
-  const currentResolutionIndex = getCurrentResolutionIndex(resolutionList);
-  setCurrentResolutionIndex(currentResolutionIndex);
-  if (!index) index = resolutionList.length - 2;
+  const { resolution, resolutionIndex } = getCurrentResolution(resolutionList);
+  setCurrentResolutionIndex(resolutionIndex);
+  if (index == -1) index = resolutionList.length - 2;
   const newResolution = resolutionList[index];
   newResolution.click();
+  return resolution.innerText;
 };
 
-const changeVideoLowResolution = () => {
+const changeVideoLowResolution = (timer) => {
   clearTimeout(updateResolution);
+  if (disabled) return;
   if (onBlur) return;
   updateResolution = setTimeout(() => {
     openQualitySettings();
-    setQualityResolution();
+    const newResolution = setQualityResolution();
     onBlur = true;
-    beginBlurTime();
-  }, blurTimeOut);
+    beginBlurTime(newResolution);
+  }, timer || blurTimeOut);
 };
 
-const changeVideoLastResolution = () => {
+const changeVideoLastResolution = (timer) => {
   clearTimeout(updateResolution);
+  if (disabled) return;
   if (!onBlur) return;
   updateResolution = setTimeout(() => {
     openQualitySettings();
     setQualityResolution(fetchCurrentResolutionIndex());
     onBlur = false;
     endBlurTime();
-  }, focusTimeOut);
+  }, timer || focusTimeOut);
 };
 
 const sendResolutionBlurStatus = (state) => {
-  console.log(state);
   browser.runtime.sendMessage({
     action: "setFeatureState",
     name: "resolutionBlur",
     state: state,
   });
-}
+};
 
-const setWindowListeners = () => {
-  window.addEventListener("focus", function () {
-    changeVideoLastResolution();
-  });
-
-  window.addEventListener("blur", function () {
-    changeVideoLowResolution();
-  });
-
+const enableWindowListeners = () => {
+  changeVideoLastResolution(0);
   onBlur = false;
-  console.log("setWindowListeners");
+  disabled = false;
   sendResolutionBlurStatus(true);
 };
 
-const unsetWindowListeners = () => {
-  window.removeEventListener("focus", function () {
-    changeVideoLastResolution();
-  });
-
-  window.removeEventListener("blur", function () {
-    changeVideoLowResolution();
-  });
-
+const disableWindowListeners = () => {
   onBlur = true;
-  console.log("unsetWindowListeners");
+  changeVideoLastResolution(0);
+  onBlur = false;
+  disabled = true;
   sendResolutionBlurStatus(false);
 };
 
 const updaterBlurListeners = () => {
+  window.addEventListener("focus", () => {
+    changeVideoLastResolution();
+  });
+
+  window.addEventListener("blur", () => {
+    changeVideoLowResolution();
+  });
+
   browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (disabled) return;
     if (request.action === "checkBlur") {
       sendResponse({ uuid: uuid });
     }
   });
 };
 
-const beginBlurTime = () => {
+const beginBlurTime = (resolution) => {
   browser.runtime
     .sendMessage({
       action: "beginBlur",
-      resolution: "720p",
+      resolution: resolution,
     })
     .then((response) => {
+      if (!response) return;
       uuid = response.uuid;
     });
 };
@@ -134,4 +136,3 @@ const endBlurTime = () => {
 };
 
 updaterBlurListeners();
-

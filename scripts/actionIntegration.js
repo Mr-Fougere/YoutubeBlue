@@ -141,11 +141,11 @@ const addResolutionBlurCheckbox = (checked) => {
     const newStatus = adSkipperButtonChecked !== "true";
 
     resolutionBlurCheckbox.setAttribute("aria-checked", newStatus);
-    if (newStatus) setWindowListeners();
-    else unsetWindowListeners();
+    if (newStatus) enableWindowListeners();
+    else disableWindowListeners();
   });
 
-  if(checked) setWindowListeners();
+  if(checked) enableWindowListeners();
 
   settingMenu.prepend(resolutionBlurCheckbox);
 };
