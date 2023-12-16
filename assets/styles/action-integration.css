@@ -3,5 +3,13 @@ button.ytp-ads-button[aria-enabled="true"] svg  g:last-child path {
 }
 
 button.ytp-ads-button[aria-enabled="true"] svg  g:first-child path {
-    fill: darkgrey
+    fill: #ffb1b1;
+}
+
+button.ytp-ads-button[aria-enabled="false"] svg  g:first-child path {
+    fill: #FF0000;
+}
+
+#resolution-blur.ytp-menuitem[aria-checked="true"] .ytp-menuitem-toggle-checkbox{
+    background-color: #0091ff !important;
 }

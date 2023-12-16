@@ -48,7 +48,7 @@ const setQualityResolution = (index = -1) => {
   setCurrentResolutionIndex(resolutionIndex);
   if (index == -1) index = resolutionList.length - 2;
   const newResolution = resolutionList[index];
-  newResolution.click();
+  if (newResolution) newResolution.click();
   return resolution.innerText;
 };
 
