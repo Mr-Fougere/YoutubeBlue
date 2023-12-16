@@ -1,14 +1,21 @@
 {
   "manifest_version": 3,
   "name": "YouTubeBlue",
-  "version": "0.2.6",
-  "version_name": "0.2.6-beta",
+  "version": "0.3.0",
+  "version_name": "0.3.0-beta",
   "author": "Mr-Fougere",
   "description": "YouTubeBlue is a browser extension with features to improve use of YouTube ",
   "permissions": ["storage", "tabs"],
   "update_url": "https://github.com/Mr-Fougere/youSkip",
   "background": {
-    "scripts": ["scripts/background.js","scripts/backBlur.js"]
+    "scripts": [
+      "classes/databaseEngine.js",
+      "classes/setupDataBase.js",
+      "classes/dataInjector.js",
+      "classes/dataFormatter.js",
+      "scripts/background.js",
+      "scripts/backBlur.js"
+    ]
   },
   "icons": {
     "48": "assets/icons/logo48.png",
@@ -32,7 +39,11 @@
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/watch?*"],
-      "js": ["scripts/adSkipper.js","scripts/resolutionBlur.js","scripts/actionIntegration.js"],
+      "js": [
+        "scripts/adSkipper.js",
+        "scripts/resolutionBlur.js",
+        "scripts/actionIntegration.js"
+      ],
       "css": ["assets/styles/action-integration.css"]
     },
     {

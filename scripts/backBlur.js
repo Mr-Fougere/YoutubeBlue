@@ -63,13 +63,25 @@ const blurSaving = (blur) => {
   return currentResolutionData - lowerResolutionData;
 };
 
-const stopBlurTime = (uuid, abrupt = false) => {
+const injectNewBlur = async (blur) => {
+  const message = {
+    resolution: blur.resolution,
+    data: blur.data,
+    time: blur.time,
+  };
+  await dataInjector.openDB();
+  await dataInjector.add(message)
+  await pullItems()
+  dataInjector.closeDB();
+};
+
+const stopBlurTime = async (uuid, abrupt = false) => {
   if (!blurTime[uuid]) return;
 
   blurTime[uuid].time = blurTime[uuid].time - (abrupt ? 5 : 0);
   clearInterval(blurTime[uuid].interval);
   if (blurTime[uuid].time > 0) blurTime[uuid].data = blurSaving(blurTime[uuid]);
-  console.log(blurTime[uuid]);
+  await injectNewBlur(blurTime[uuid]);
   delete blurTime[uuid];
 };
 

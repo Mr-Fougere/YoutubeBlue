@@ -54,9 +54,11 @@ const playerCallback = (mutationsList, _observer) => {
 
 const addNewSkip = (skippable, duration) => {
   const message = {
-    action: "newSkip",
-    duration: duration,
-    skippable: skippable,
+    action: "newInjection",
+    data: {
+      duration: duration,
+      skippable: skippable,
+    },
   };
   browser.runtime.sendMessage(message);
 };
@@ -67,7 +69,7 @@ const sendAdsSkipperStatus = (state) => {
     name: "adsSkipper",
     state: state,
   });
-}
+};
 
 const setPlayer = () => {
   const player = document.getElementById("player");
@@ -88,7 +90,7 @@ const setPlayer = () => {
 
   playerObserver = new MutationObserver(playerCallback);
   playerObserver.observe(player, observerConfig);
-  sendAdsSkipperStatus(true)
+  sendAdsSkipperStatus(true);
 };
 
 const unsetPlayer = () => {
@@ -99,6 +101,6 @@ const unsetPlayer = () => {
         setTimeout(() => skipAd(), 250)
       );
     playerObserver.disconnect();
-    sendAdsSkipperStatus(false)
+    sendAdsSkipperStatus(false);
   } catch (error) {}
 };

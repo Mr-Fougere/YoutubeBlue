@@ -6,22 +6,15 @@ const monthUnskippableCount = document.getElementById(
 const monthSkippableCount = document.getElementById("month-skippable-count");
 const averageTime = document.getElementById("average-ads-time");
 const errorDisplay = document.getElementById("error-flash");
+const monthBlurTime = document.getElementById("month-blur-time");
+const totalSavedData = document.getElementById("data-saved");
 const versionName = document.getElementById("version-name");
 
-
-const timeConverter = (seconds) => {
-  const hours = Math.floor((seconds % (3600 * 24)) / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return hours + "h " + minutes + "m " + remainingSeconds + "s ";
-};
-
-const fetchInformation = (month = null) => {
+const fetchInformation = () => {
   return new Promise((resolve, reject) => {
     browser.runtime
       .sendMessage({
         action: "fetchInformations",
-        month: month,
       })
       .then((response) => {
         resolve(response);
@@ -35,26 +28,32 @@ const fetchInformation = (month = null) => {
 const fetchAllInformations = () => {
   fetchInformation()
     .then((response) => {
-      const { time, averageAdsTime, count } = response;
+      console.log(response);
+      const {
+        time,
+        averageAdsTime,
+        count,
+        unskippableCount,
+        skippableCount,
+        blurTime,
+        dataSaved,
+      } = response;
+      if (
+        time == 0 &&
+        averageAdsTime == 0 &&
+        count == 0 &&
+        blurTime == 0 &&
+        dataSaved == 0
+      )
+        return;
 
       totalSkipCount.textContent = count;
-      totalSkipTime.textContent = timeConverter(time);
+      totalSkipTime.textContent = time;
       averageTime.textContent = averageAdsTime + "s";
-    })
-    .catch((e) => {
-      console.log(e);
-      errorDisplay.textContent = "An error occurred while fetching data";
-    });
-};
-
-const fetchMonthInformations = () => {
-  const currentMonth = new Date().getMonth();
-  fetchInformation(currentMonth)
-    .then((response) => {
-      const { unskippableCount, skippableCount } = response;
-
       monthUnskippableCount.textContent = unskippableCount;
       monthSkippableCount.textContent = skippableCount;
+      monthBlurTime.textContent = blurTime;
+      totalSavedData.textContent = dataSaved;
     })
     .catch((e) => {
       console.log(e);
@@ -68,4 +67,3 @@ const setVersionName = () => {
 
 setVersionName();
 fetchAllInformations();
-fetchMonthInformations();
