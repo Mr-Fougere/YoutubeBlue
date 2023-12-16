@@ -66,3 +66,7 @@ footer .refresh-warning {
   opacity: 0.6;
   font-size: x-small;
 }
+
+button.ytp-ads-button.ytp-button path{
+  fill: red !important;
+}

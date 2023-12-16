@@ -32,7 +32,7 @@
   "content_scripts": [
     {
       "matches": ["*://www.youtube.com/watch?*"],
-      "js": ["scripts/adSkipper.js","scripts/resolutionBlur.js"]
+      "js": ["scripts/adSkipper.js","scripts/resolutionBlur.js","scripts/actionIntegration.js"]
     },
     {
       "matches": ["*://www.youtube.com/*"],

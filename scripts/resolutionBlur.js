@@ -139,4 +139,4 @@ const launchResolutionBlur = () => {
   updaterBlurListeners();
 };
 
-launchResolutionBlur();
+//launchResolutionBlur();
