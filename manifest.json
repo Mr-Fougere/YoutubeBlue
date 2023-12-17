@@ -13,6 +13,7 @@
       "classes/setupDataBase.js",
       "classes/dataInjector.js",
       "classes/dataFormatter.js",
+      "classes/blurManager.js",
       "scripts/background.js",
       "scripts/backBlur.js"
     ]

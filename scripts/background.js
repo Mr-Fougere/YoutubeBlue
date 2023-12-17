@@ -2,6 +2,7 @@ let allData;
 const dataInjector = new DataInjector();
 const dataFormatter = new DataFormatter();
 const dbEngine = new SetupDataBase();
+const blurManager =  new BlurManager();
 
 const setup = async () => {
   try {
@@ -21,8 +22,7 @@ const pullItems = async () => {
 };
 
 const setMessageListeners = () => {
-  browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-
+  browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action == "newInjection") {
       dataInjector.openDB().then(() => {
         dataInjector.add(request.data).then(() =>
@@ -43,6 +43,16 @@ const setMessageListeners = () => {
 
     if (request.action == "setFeatureState") {
       localStorage.setItem(request.name, request.state);
+    }
+
+    if (request.action == "beginBlur") {
+      if (["144p", "Auto"].includes(request.resolution)) return;
+      const uuid = blurManager.newBlurTime(request.resolution, sender.tab.id);
+      sendResponse({ uuid: uuid });
+    }
+
+    if (request.action == "endBlur") {
+      blurManager.stopBlurTime(request.uuid);
     }
   });
 };

@@ -68,7 +68,7 @@ const changeVideoLowResolution = (timer) => {
   if (onBlur) return;
   updateBlur = setTimeout(() => {
     video.style.filter = 'brightness(0)';
-  }, resolutionTimeOut - 1000 );
+  }, resolutionTimeOut - 1000 );  
 
   updateResolution = setTimeout(() => {
     openQualitySettings();
