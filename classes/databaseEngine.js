@@ -183,7 +183,6 @@ class DatabaseEngine {
 
   async updateVersionAndCreateTable(tableName, indexDefinition) {
     return new Promise(async (resolve, reject) => {
-      console.log(this.db);
       if (!this.db) {
         reject("Base de données non ouverte");
         return;

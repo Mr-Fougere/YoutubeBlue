@@ -22,7 +22,6 @@ const pullItems = async () => {
 
 const setMessageListeners = () => {
   browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-    console.log(request);
 
     if (request.action == "newInjection") {
       dataInjector.openDB().then(() => {

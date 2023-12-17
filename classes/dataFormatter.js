@@ -12,7 +12,6 @@ class DataFormatter {
   };
 
   dataConverter = (dataAmount, precision = 2) => {
-    console.log(dataAmount);
     const megabyteThreshold = 1024;
 
     const gigabytes = dataAmount / megabyteThreshold;
@@ -25,7 +24,6 @@ class DataFormatter {
   };
 
   popupFormat(data) {
-    console.log(data);
     this.data = data;
     let formattedData = {
       unskippableCount: 0,
@@ -36,7 +34,6 @@ class DataFormatter {
       dataSaved: 0,
       blurTime: 0,
     };
-    console.log(this.data);
     if (this.data.length == 0) return formattedData;
 
     for (const item of this.data) {

@@ -14,15 +14,18 @@ class DataInjector extends DatabaseEngine {
   }
 
   _retrieveCorrespondItem(data) {
+    (data);
+    ("retrieve");
     this.dataTable = this._retrieveCorrespondTable(data);
 
     return new Promise((resolve, reject) => {
       this.getItems(this.dataTable, "month", this.currentMonth)
         .then((monthItems) => {
+          (monthItems);
           if(monthItems.length == 0) resolve(null);
           for (const item of monthItems) {
-            console.log(item);
-            console.log(data);
+            (item);
+            (data);
             if (
               this.dataTable === "monthSkip" &&
               item.skippable === data.skippable
@@ -35,6 +38,7 @@ class DataInjector extends DatabaseEngine {
               resolve(item);
             }
           }
+          resolve(null);
         })
         .catch((e) => {
           console.error(e);
@@ -62,6 +66,7 @@ class DataInjector extends DatabaseEngine {
   _updateExistingItem(corresponItem, object) {
     return new Promise((resolve, reject) => {
       const _updateItem = () => {
+        (this.dataTable);
         switch (this.dataTable) {
           case "monthSkip":
             return this._adsSkipUpdate(corresponItem, object);
@@ -72,9 +77,11 @@ class DataInjector extends DatabaseEngine {
 
       this.updateItem(corresponItem.id, _updateItem(), this.dataTable)
         .then(() => {
+          ("updated");
           resolve();
         })
         .catch(() => {
+          console.error(e);
           reject();
         });
     });
@@ -99,7 +106,7 @@ class DataInjector extends DatabaseEngine {
   }
 
   _createItem(object) {
-    console.log(object);
+    (object);
     return new Promise((resolve, reject) => {
       const newItem = () => {
         switch (this.dataTable) {
@@ -109,7 +116,7 @@ class DataInjector extends DatabaseEngine {
             return this._newBlurTime(object);
         }
       };
-      console.log(newItem());
+      (newItem());
       this.addItem(newItem(), this.dataTable)
         .then(() => {
           resolve();
@@ -122,22 +129,24 @@ class DataInjector extends DatabaseEngine {
   }
 
   add(data) {
-    console.log(data, this.db);
+    (data, this.db);
     if (!data && !this.db) return;
 
-    console.log("adding data");
+    ("adding data");
 
     return new Promise((resolve, reject) => {
       this._retrieveCorrespondItem(data)
         .then((corresponItem) => {
-          console.log(corresponItem);
+          (corresponItem);
           if (corresponItem) {
-            console.log("updating existing item");
+            ("updating existing item");
             this._updateExistingItem(corresponItem, data).then(() => {
               resolve();
             });
           } else {
+            ("creating new item");
             this._createItem(data).then(() => {
+              ("created");
               resolve();
             });
           }

@@ -6,6 +6,7 @@ const RESOLUTION_CONSOMMATION = {
   "720p": 0.0677,
   "720p60": 0.0677,
   "1080p HD": 0.1146,
+  "1080p60 HD": 0.1146,
   "1440p HD": 0.1875,
   "2160p 4K": 0.4948,
   "4320 8K": 0.5469,
@@ -19,10 +20,7 @@ const checkBlurOn = async (uuid, tabId) => {
     const response = await browser.tabs.sendMessage(tabId, {
       action: "checkBlur",
     });
-    if (response.uuid === uuid) {
-      console.log("blur on");
-    } else {
-      console.log("blur off");
+    if (response.uuid !== uuid) {
       stopBlurTime(uuid, true);
     }
   } catch (error) {
@@ -70,8 +68,8 @@ const injectNewBlur = async (blur) => {
     time: blur.time,
   };
   await dataInjector.openDB();
-  await dataInjector.add(message)
-  await pullItems()
+  await dataInjector.add(message);
+  await pullItems();
   dataInjector.closeDB();
 };
 
