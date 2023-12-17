@@ -3,11 +3,11 @@ button.ytp-ads-button[aria-enabled="true"] svg  g:last-child path {
 }
 
 button.ytp-ads-button[aria-enabled="true"] svg  g:first-child path {
-    fill: #ffb1b1;
+    fill: #aedafc;
 }
 
 button.ytp-ads-button[aria-enabled="false"] svg  g:first-child path {
-    fill: #FF0000;
+    fill: #0091ff;
 }
 
 #resolution-blur.ytp-menuitem[aria-checked="true"] .ytp-menuitem-toggle-checkbox{

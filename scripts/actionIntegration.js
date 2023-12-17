@@ -42,10 +42,10 @@ const createAdSkipper = (enabled) => {
   adSkipperButton.setAttribute("aria-keyshortcuts", "a");
   adSkipperButton.setAttribute("data-priority", "11");
   adSkipperButton.setAttribute("data-tooltip-target-id", "ytp-ads-button");
-  adSkipperButton.setAttribute("data-title-no-tooltip", "Ads Skipper");
+  adSkipperButton.setAttribute("data-title-no-tooltip", "Ads");
   adSkipperButton.setAttribute("aria-enabled", enabled);
-  adSkipperButton.setAttribute("aria-label", "Ads Skipper Keyshortcut a");
-  adSkipperButton.setAttribute("title", "Ads Skipper (a)");
+  adSkipperButton.setAttribute("aria-label", "Ads Keyshortcut a");
+  adSkipperButton.setAttribute("title", "Ads (a)");
 
   const svgElement = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -86,7 +86,7 @@ const createAdSkipper = (enabled) => {
   });
 
   adSkipperButton.addEventListener("mouseleave", () => {
-    adSkipperButton.setAttribute("title", "Ads Skipper (a)");
+    adSkipperButton.setAttribute("title", "Ads (a)");
     if (tooltip) tooltip.style.display = "none";
   });
 
