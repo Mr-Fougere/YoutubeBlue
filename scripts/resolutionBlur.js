@@ -65,7 +65,9 @@ const changeVideoLowResolution = (timer) => {
   clearTimeout(updateBlur);
 
   if (disabled) return;
+  if (video.paused || video.ended ) return
   if (onBlur) return;
+
   updateBlur = setTimeout(() => {
     video.style.filter = 'brightness(0)';
   }, resolutionTimeOut - 1000 );  
@@ -81,6 +83,7 @@ const changeVideoLowResolution = (timer) => {
 const changeVideoLastResolution = (timer) => {
   clearTimeout(updateResolution);
   clearTimeout(updateBlur);
+
   if (disabled) return;
   if (!onBlur) return;
 
