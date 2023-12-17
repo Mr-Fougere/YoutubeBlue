@@ -1,8 +1,10 @@
 const resolutionStorageName = "currentResolution";
-const blurTimeOut = 5000,
-  focusTimeOut = 2500;
+const video = document.getElementsByTagName("VIDEO")[0];
+const resolutionTimeOut = 5000,
+  resolutionTimeIn = 2500;
+
 let onBlur = false;
-let updateResolution, uuid;
+let updateResolution, uuid, updateBlur;
 let disabled = true;
 
 const getCurrentResolution = (resolutionList) => {
@@ -37,7 +39,13 @@ const openQualitySettings = () => {
   settingButton.click();
 
   const settingsList = document.querySelectorAll(".ytp-menuitem");
-  settingsList[settingsList.length - 1].click();
+  const qualityTab = Array.from(settingsList).find(
+    (setting) =>
+      setting.innerText.includes("Qualité") ||
+      setting.innerText.includes("Quality")
+  );
+  if (!qualityTab) return;
+  qualityTab.click();
 };
 
 const setQualityResolution = (index = -1) => {
@@ -54,26 +62,38 @@ const setQualityResolution = (index = -1) => {
 
 const changeVideoLowResolution = (timer) => {
   clearTimeout(updateResolution);
+  clearTimeout(updateBlur);
+
   if (disabled) return;
   if (onBlur) return;
+  updateBlur = setTimeout(() => {
+    video.style.filter = 'brightness(0)';
+  }, resolutionTimeOut - 1000 );
+
   updateResolution = setTimeout(() => {
     openQualitySettings();
     const newResolution = setQualityResolution();
     onBlur = true;
     beginBlurTime(newResolution);
-  }, timer || blurTimeOut);
+  }, timer || resolutionTimeOut);
 };
 
 const changeVideoLastResolution = (timer) => {
   clearTimeout(updateResolution);
+  clearTimeout(updateBlur);
   if (disabled) return;
   if (!onBlur) return;
+
+  updateBlur = setTimeout(() => {
+    video.style.filter = 'brightness(1)';
+  }, resolutionTimeIn + 500 );
+
   updateResolution = setTimeout(() => {
     openQualitySettings();
     setQualityResolution(fetchCurrentResolutionIndex());
     onBlur = false;
     endBlurTime();
-  }, timer || focusTimeOut);
+  }, timer || resolutionTimeIn);
 };
 
 const sendResolutionBlurStatus = (state) => {
@@ -100,6 +120,10 @@ const disableWindowListeners = () => {
 };
 
 const updaterBlurListeners = () => {
+  document.hasFocus()
+    ? changeVideoLowResolution(0)
+    : changeVideoLastResolution(0);
+
   window.addEventListener("focus", () => {
     changeVideoLastResolution();
   });

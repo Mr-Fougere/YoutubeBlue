@@ -1,15 +1,20 @@
-button.ytp-ads-button[aria-enabled="true"] svg  g:last-child path {
-    fill: white
+button.ytp-ads-button[aria-enabled="true"] svg g:last-child path {
+  fill: white;
 }
 
-button.ytp-ads-button[aria-enabled="true"] svg  g:first-child path {
-    fill: #aedafc;
+button.ytp-ads-button[aria-enabled="true"] svg g:first-child path {
+  fill: #aedafc;
 }
 
-button.ytp-ads-button[aria-enabled="false"] svg  g:first-child path {
-    fill: #0091ff;
+button.ytp-ads-button[aria-enabled="false"] svg g:first-child path {
+  fill: #0091ff;
 }
 
-#resolution-blur.ytp-menuitem[aria-checked="true"] .ytp-menuitem-toggle-checkbox{
-    background-color: #0091ff !important;
+#resolution-blur.ytp-menuitem[aria-checked="true"]
+  .ytp-menuitem-toggle-checkbox {
+  background-color: #0091ff !important;
+}
+
+.video-stream.html5-main-video {
+  transition: filter 0.5s ease-in;
 }
