@@ -1,13 +1,20 @@
 html,
 body {
   font-family: "Roboto", sans-serif;
-  width: 200px;
+  width: 250px;
   overflow: hidden;
+  height: max-content;
+}
+*{
+  padding: 0;
+  margin: 0;
+  user-select: none;
 }
 
 img {
   width: 25px;
   height: 25px;
+  object-fit: contain;
 }
 
 header {
@@ -16,34 +23,37 @@ header {
   justify-content: space-between;
   align-items: center;
   font-size: small;
+  background-color: var(--header-background);
+  padding: 5px;
+  border-bottom: 1px solid var(--disabled-background)
 }
 
-#logo,
-#version {
+#logo {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
 
-#logo img,
-#version img {
+#logo img {
   width: 20px;
   height: 20px;
   object-fit: contain;
 }
 
-#logo .logo-image,
-#version .version-index {
+#logo .logo-image {
   margin-right: 3px;
 }
 
 #logo {
   font-weight: bold;
 }
+.logo-name{
+  display: flex;
+}
 
 .logo-name-color{
-  font-size: x-small;
+  font-size: xx-small;
   color: var(--item-text-color);
 }
 
@@ -56,12 +66,7 @@ a{
   color: inherit;
 }
 
-footer {
-  text-align: center;
-}
-
-#error-flash,
-footer .refresh-warning {
+#error-flash {
   color: red;
   opacity: 0.6;
   font-size: x-small;
@@ -69,4 +74,27 @@ footer .refresh-warning {
 
 button.ytp-ads-button.ytp-button path{
   fill: red !important;
+}
+
+footer{
+  display: flex;
+  flex-direction: row;
+  font-size: xx-small;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0.5;
+  padding: 5px;
+  padding-inline: 10px;
+}
+
+footer img{
+  width: 10;
+  height: 10;
+}
+
+.footer-item{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

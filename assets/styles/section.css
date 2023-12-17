@@ -1,0 +1,17 @@
+.section-divider {
+  height: 2px;
+  background-color: var(--disabled-background);
+  margin-inline: 5px;
+}
+
+.section-content {
+  transition: all 1s ease;
+  overflow: hidden;
+  height: max-content;
+}
+
+.section{
+    margin-top: 5px;
+}
+
+

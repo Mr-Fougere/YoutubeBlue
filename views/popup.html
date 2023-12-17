@@ -3,9 +3,9 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../assets/styles/variables.css" />
     <link rel="stylesheet" href="../assets/styles/popup.css" />
+    <link rel="stylesheet" href="../assets/styles/section.css" />
     <link rel="stylesheet" href="../assets/styles/section-title.css" />
     <link rel="stylesheet" href="../assets/styles/section-content.css" />
-    <link rel="stylesheet" href="../assets/styles/bool-switch.css" />
   </head>
 
   <body>
@@ -16,9 +16,132 @@
           >YouTube<span class="logo-name-color">BLUE</span></span
         >
       </div>
+    </header>
 
-      <div id="version">
-        <span class="version-index" id="version-name"></span>
+    <p id="error-flash"></p>
+
+    <div class="sections">
+      <div class="section">
+        <div class="section-title">Global Recap</div>
+        <div class="section-content">
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/ads.png"
+              />
+              <span class="section-content-item-name">Skipped Ads</span>
+            </div>
+            <div class="section-content-item-content">
+              <span class="section-content-item-value" id="total-skip-count"
+                >0</span
+              >
+            </div>
+          </div>
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/data.png"
+              />
+              <span class="section-content-item-name">Data Saved</span>
+            </div>
+            <div class="section-content-item-content">
+              <span class="section-content-item-value" id="data-saved"
+                >0 Mo</span
+              >
+            </div>
+          </div>
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/duration.png"
+              />
+              <span class="section-content-item-name">Average ads time</span>
+            </div>
+            <div class="section-content-item-content">
+              <span class="section-content-item-value" id="average-ads-time"
+                >0s</span
+              >
+            </div>
+          </div>
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/time.png"
+              />
+              <span class="section-content-item-name">Ads time</span>
+            </div>
+            <div class="section-content-item-content">
+              <span class="section-content-item-value" id="total-skip-time"
+                >0h 0m 0s</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Month Recap</div>
+        <div class="section-content">
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/skippable.png"
+              />
+              <span class="section-content-item-name">Skippable Ads</span>
+            </div>
+            <div class="section-content-item-content">
+              <span
+                class="section-content-item-value"
+                id="month-skippable-count"
+                >0</span
+              >
+            </div>
+          </div>
+          <div class="section-content-item">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/unskippable.png"
+              />
+              <span class="section-content-item-name">Unskippable Ads</span>
+            </div>
+            <div class="section-content-item-content">
+              <span
+                class="section-content-item-value"
+                id="month-unskippable-count"
+                >0</span
+              >
+            </div>
+          </div>
+          <div class="section-content-item large">
+            <div class="section-content-item-title">
+              <img
+                class="section-content-item-icon"
+                src="../assets/images/blur-time.png"
+              />
+              <span class="section-content-item-name">Blur Time</span>
+            </div>
+            <div class="section-content-item-content">
+              <span class="section-content-item-value" id="month-blur-time"
+                >0h 0m 0s</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+      </div>
+    </div>
+    <footer>
+      <div class="footer-item left">
+        <span class="version-name" id="version-name">v1.2.3</span>
+      </div>
+      <div class="footer-item right">
+        <span class="author-name" id="author-name">Made by Mr-Fougere</span>
         <a
           class="version-link"
           href="https://github.com/Mr-Fougere/YoutubeBlue"
@@ -26,96 +149,7 @@
           <img class="github-icon" src="../assets/images/github.png" />
         </a>
       </div>
-    </header>
-
-    <p id="error-flash"></p>
-
-    <div class="sections">
-      <div class="section">
-        <div class="section-title">
-          <span class="section-name">Global Recap</span>
-          <div class="section-divider"></div>
-        </div>
-        <div class="section-content">
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/skips.png"
-            />
-            <span class="section-content-item-value" id="total-skip-count"
-              >0</span
-            >
-            <span class="section-content-item-name">Skipped Ads</span>
-          </div>
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/time.png"
-            />
-            <span class="section-content-item-value" id="total-skip-time"
-              >0h 0m 0s</span
-            >
-            <span class="section-content-item-name">Ads time</span>
-          </div>
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/ads.png"
-            />
-            <span class="section-content-item-value" id="average-ads-time"
-              >0s</span
-            >
-            <span class="section-content-item-name">Average ads time</span>
-          </div>
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/data.png"
-            />
-            <span class="section-content-item-value" id="data-saved">0 Mo</span>
-            <span class="section-content-item-name">Data Saved</span>
-          </div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="section-title">
-          <span class="section-name">Month Recap</span>
-          <div class="section-divider"></div>
-        </div>
-        <div class="section-content">
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/clickable-ads.png"
-            />
-            <span class="section-content-item-value" id="month-skippable-count"
-              >0</span
-            >
-            <span class="section-content-item-name">Skippable Ads</span>
-          </div>
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/waiting-ads.png"
-            />
-            <span
-              class="section-content-item-value"
-              id="month-unskippable-count"
-              >0</span
-            >
-            <span class="section-content-item-name">Unskippable Ads</span>
-          </div>
-          <div class="section-content-item">
-            <img
-              class="section-content-item-icon"
-              src="../assets/images/blur-time.png"
-            />
-            <span class="section-content-item-value" id="month-blur-time">0s</span>
-            <span class="section-content-item-name">Blur Time</span>
-          </div>
-        </div>
-      </div>
-    </div>
+    </footer>
     <script src="../scripts/popup.js"></script>
   </body>
 </html>
