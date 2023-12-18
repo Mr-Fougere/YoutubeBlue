@@ -30,11 +30,19 @@ const checkBackgrounStatus = () => {
       .sendMessage({ action: "backgroundStatus" })
       .then((response) => {
         resolve(response.status);
+      })
+      .catch(() => {
+        setTimeout(() => {
+          checkBackgrounStatus().then((status) => {
+            resolve(status);
+          });
+        }, 1000);
       });
   });
 };
 
 const buildService = (node) => {
+  console.log(node);
   if (built) return;
   if (!node) return;
   if (node.parentNode.parentNode.id != "movie_player") return;

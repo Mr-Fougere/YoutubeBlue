@@ -101,3 +101,20 @@ footer img{
   justify-content: center;
   align-items: center;
 }
+
+.section-content-item-loading{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border-top: 2px solid white;
+  animation: spin 1s linear infinite;
+}
+
+.section-content-item-loading.hidden{
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

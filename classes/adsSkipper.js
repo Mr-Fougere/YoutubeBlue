@@ -1,5 +1,5 @@
 class AdsSkipper {
-  ADS_MODULE_CLASSES = ".video-ads.ytp-ad-module"
+  ADS_MODULE_CLASSES = ".video-ads.ytp-ad-module";
   SKIPPABLE_CLASSES = "ytp-ad-skip-button-slot";
   DOUBLE_SKIP_BUTTON_CLASSES =
     "ytp-ad-skip-button-container ytp-ad-skip-button-container-detached";
@@ -7,7 +7,7 @@ class AdsSkipper {
   DEFAULT_AD_TIME = 5; // in seconds
 
   constructor() {
-    this.active = true;
+    this.active = false;
     this.player;
     this.videoPlayer;
     this.adModule;
@@ -48,15 +48,21 @@ class AdsSkipper {
         skippable: skippable,
       },
     };
-    browser.runtime.sendMessage(message);
+    browser.runtime
+      .sendMessage(message)
+      .catch(() =>
+        setTimeout(() => this.addNewSkip(skippable, duration), 1000)
+      );
   };
 
   sendAdsSkipperStatus = (state) => {
-    browser.runtime.sendMessage({
-      action: "setFeatureState",
-      name: "adsSkipper",
-      state: state,
-    });
+    browser.runtime
+      .sendMessage({
+        action: "setFeatureState",
+        name: "adsSkipper",
+        state: state,
+      })
+      .catch(() => setTimeout(() => this.sendAdsSkipperStatus(state), 1000));
   };
 
   skipAd = () => {
@@ -68,7 +74,7 @@ class AdsSkipper {
 
     const adPlayer = this.adModule.querySelector(this.ADS_PREVIEW_CLASSES);
     if (!adPlayer) return;
-    
+
     const { videoDuration } = this.forwardAdVideo();
 
     const skipButton = adPlayer.firstChild.lastChild;

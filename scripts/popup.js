@@ -25,6 +25,23 @@ const fetchInformation = () => {
   });
 };
 
+const checkBackgrounStatus = () => {
+  return new Promise((resolve, reject) => {
+    browser.runtime
+      .sendMessage({ action: "backgroundStatus" })
+      .then((response) => {
+        resolve(response.status);
+      });
+  });
+};
+
+const hideLoadingSpin = () => {
+  const loadingSpins = document.querySelectorAll(".section-content-item-loading");
+  loadingSpins.forEach((spin) => {
+    spin.classList.add("hidden");
+  });
+}
+
 const fetchAllInformations = () => {
   fetchInformation()
     .then((response) => {
@@ -40,22 +57,16 @@ const fetchAllInformations = () => {
         dataSaved,
       } = response;
       
-      if (
-        time == 0 &&
-        averageAdsTime == 0 &&
-        count == 0 &&
-        blurTime == 0 &&
-        dataSaved == 0
-      )
-        return;
+      hideLoadingSpin();
 
       totalSkipCount.textContent = count;
       totalSkipTime.textContent = time;
-      averageTime.textContent = averageAdsTime + "s";
+      averageTime.textContent = averageAdsTime;
       monthUnskippableCount.textContent = unskippableCount;
       monthSkippableCount.textContent = skippableCount;
       monthBlurTime.textContent = blurTime;
       totalSavedData.textContent = dataSaved;
+
     })
     .catch((e) => {
       errorDisplay.textContent = e.message;
@@ -66,5 +77,16 @@ const setVersionName = () => {
   versionName.textContent = "v" + browser.runtime.getManifest().version_name;
 };
 
+const launchFetching = () =>{
+  checkBackgrounStatus().then((status) => {
+    if (status == "ready") {
+      fetchAllInformations();
+    }
+  });
+  setTimeout(() => {
+    launchFetching();
+  }, 1000);
+}
+
 setVersionName();
-fetchAllInformations();
+launchFetching();

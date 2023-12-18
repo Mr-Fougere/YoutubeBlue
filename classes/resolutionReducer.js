@@ -6,11 +6,11 @@ class ResolutionReducer {
 
   constructor() {
     this.onBlur = false;
-    this.updateResolution= null;
+    this.updateResolution = null;
     this.updateBlur = null;
-    this.player = null ;
+    this.player = null;
     this.uuid = null;
-    this.active = true;
+    this.active = false;
     this.videoPlayer = null;
     this.lastResolution = null;
   }
@@ -35,7 +35,7 @@ class ResolutionReducer {
   };
 
   setCurrentResolutionIndex = (currentResolutionIndex) => {
-   this.lastResolution = currentResolutionIndex;
+    this.lastResolution = currentResolutionIndex;
   };
 
   fetchCurrentResolutionIndex = () => {
@@ -139,11 +139,15 @@ class ResolutionReducer {
   };
 
   sendResolutionBlurStatus = (state) => {
-    browser.runtime.sendMessage({
-      action: "setFeatureState",
-      name: "resolutionBlur",
-      state: state,
-    });
+    browser.runtime
+      .sendMessage({
+        action: "setFeatureState",
+        name: "resolutionBlur",
+        state: state,
+      })
+      .catch(() =>
+        setTimeout(() => this.sendResolutionBlurStatus(state), 1000)
+      );
   };
 
   changeActiveStatus = (status) => {
@@ -181,13 +185,14 @@ class ResolutionReducer {
       .then((response) => {
         if (!response) return;
         this.uuid = response.uuid;
-      });
+      })
+      .catch(() => setTimeout(() => this.beginBlurTime(resolution), 1000));
   };
 
   endBlurTime = () => {
     browser.runtime.sendMessage({
       action: "endBlur",
       uuid: this.uuid,
-    });
+    }).catch(() => setTimeout(() => this.endBlurTime(), 1000));
   };
 }

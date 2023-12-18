@@ -28,14 +28,18 @@ class DataFormatter {
     let formattedData = {
       unskippableCount: 0,
       skippableCount: 0,
-      averageAdsTime: 0,
+      averageAdsTime: "0s",
       count: 0,
-      time: 0,
+      time: "0h 0m 0s",
       dataSaved: 0,
-      blurTime: 0,
+      blurTime: "0h 0m 0s",
     };
     if (this.data.length == 0) return formattedData;
 
+    formattedData.time = 0;
+    formattedData.averageAdsTime = 0;
+    formattedData.blurTime = 0;
+    
     for (const item of this.data) {
       if (item.count) {
         formattedData.count += item.count;
@@ -56,7 +60,7 @@ class DataFormatter {
     }
 
     formattedData.averageAdsTime =
-      Math.round(formattedData.time / formattedData.count) || 0;
+    this.timeConverter(Math.round(formattedData.time / formattedData.count) || 0);
     formattedData.time = this.timeConverter(formattedData.time);
     formattedData.dataSaved = this.dataConverter(formattedData.dataSaved);
     formattedData.blurTime = this.timeConverter(formattedData.blurTime);
