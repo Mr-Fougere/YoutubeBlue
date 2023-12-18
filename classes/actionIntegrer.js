@@ -109,7 +109,6 @@ class ActionIntegrer {
       tooltip = document.querySelector(
         ".ytp-tooltip.ytp-rounded-tooltip.ytp-bottom"
       );
-      console.log(tooltip);
       this.displayTooltipText(button);
       setTimeout(() => {
         if (tooltip) tooltip.style.removeProperty("display");

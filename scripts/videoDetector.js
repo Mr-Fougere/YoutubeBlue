@@ -56,7 +56,6 @@ const mutationCallback = (mutationsList, _observer) => {
 const setup = async () => {
   const obs = new MutationObserver(mutationCallback);
   mainPlayer = await setMainPlayer();
-  console.log(mainPlayer);
   obs.observe(mainPlayer, config);
   buildService(mainPlayer.querySelector("VIDEO.video-stream.html5-main-video"));
 };
