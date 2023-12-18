@@ -10,10 +10,9 @@ let videoTryCount = 0,
   playerObserver;
 
 const forwardAdVideo = () => {
-  const video = document.getElementsByTagName("VIDEO")[0];
-  video.currentTime = video.duration;
-  video.play();
-  return { videoDuration: Math.round(video.duration) };
+  videoPlayer.value.currentTime = videoPlayer.value.duration;
+  videoPlayer.value.play();
+  return { videoDuration: Math.round(videoPlayer.value.duration) };
 };
 
 const checkDoubleSkipAd = () => {
@@ -79,14 +78,7 @@ const setPlayer = () => {
     setTimeout(() => setPlayer, 100);
   }
 
-  const video = document.getElementsByTagName("VIDEO")[0];
-  if (!video) {
-    if (videoTryCount > 10) return;
-    videoTryCount++;
-    setTimeout(() => setPlayer, 100);
-  }
-
-  video.addEventListener("playing", () => setTimeout(() => skipAd(), 250));
+  videoPlayer.value.addEventListener("playing", () => setTimeout(() => skipAd(), 250));
 
   playerObserver = new MutationObserver(playerCallback);
   playerObserver.observe(player, observerConfig);
@@ -95,9 +87,8 @@ const setPlayer = () => {
 
 const unsetPlayer = () => {
   try {
-    const video = document.getElementsByTagName("VIDEO")[0];
-    if (video)
-      video.removeEventListener("playing", () =>
+    if (videoPlayer.value)
+      videoPlayer.value.removeEventListener("playing", () =>
         setTimeout(() => skipAd(), 250)
       );
     playerObserver.disconnect();

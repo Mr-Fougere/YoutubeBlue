@@ -1,5 +1,4 @@
 const resolutionStorageName = "currentResolution";
-const video = document.getElementsByTagName("VIDEO")[0];
 const resolutionTimeOut = 5000,
   resolutionTimeIn = 2500;
 
@@ -65,11 +64,11 @@ const changeVideoLowResolution = (timer) => {
   clearTimeout(updateBlur);
 
   if (disabled) return;
-  if (video.paused || video.ended ) return
+  if (videoPlayer.value.paused || videoPlayer.value.ended ) return
   if (onBlur) return;
 
   updateBlur = setTimeout(() => {
-    video.style.filter = 'brightness(0)';
+    videoPlayer.value.style.filter = 'brightness(0)';
   }, resolutionTimeOut - 1000 );  
 
   updateResolution = setTimeout(() => {
@@ -88,7 +87,7 @@ const changeVideoLastResolution = (timer) => {
   if (!onBlur) return;
 
   updateBlur = setTimeout(() => {
-    video.style.filter = 'brightness(1)';
+    videoPlayer.value.style.filter = 'brightness(1)';
   }, resolutionTimeIn + 500 );
 
   updateResolution = setTimeout(() => {
@@ -161,5 +160,3 @@ const endBlurTime = () => {
     uuid: uuid,
   });
 };
-
-updaterBlurListeners();

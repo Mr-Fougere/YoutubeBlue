@@ -42,7 +42,8 @@
       "js": [
         "scripts/adSkipper.js",
         "scripts/resolutionBlur.js",
-        "scripts/actionIntegration.js"
+        "scripts/actionIntegration.js",
+        "scripts/videoDetector.js"
       ],
       "css": ["assets/styles/action-integration.css","assets/styles/bluetify.css"]
     }

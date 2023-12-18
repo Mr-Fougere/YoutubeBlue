@@ -115,7 +115,9 @@ const addResolutionBlurCheckbox = (checked) => {
   );
 
   if (!settingMenu) {
-    setTimeout(addResolutionBlurCheckbox, 100);
+    setTimeout(() => {
+      addResolutionBlurCheckbox(checked);
+    }, 100);
     return;
   }
 
@@ -147,13 +149,12 @@ const addAdsSkipButton = (enabled) => {
 };
 
 const integrateButtons = () => {
-  const player = document.querySelector(".html5-video-player");
-
   browser.runtime
     .sendMessage({ action: "getFeatureState", name: "adsSkipper" })
     .then((response) => {
+      if (!videoPlayer) return;
       addAdsSkipButton(response);
-      player.addEventListener("mousehover", () => {
+      videoPlayer.value.addEventListener("mousehover", () => {
         addAdsSkipButton(response);
       });
     });
@@ -165,6 +166,8 @@ const integrateButtons = () => {
   browser.runtime
     .sendMessage({ action: "getFeatureState", name: "resolutionBlur" })
     .then((response) => {
+      if (!settingsButton) return;
+
       settingsButton.addEventListener("click", () => {
         setTimeout(() => {
           addResolutionBlurCheckbox(response);
@@ -172,5 +175,3 @@ const integrateButtons = () => {
       });
     });
 };
-
-integrateButtons();
