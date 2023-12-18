@@ -5,14 +5,26 @@ const resolutionTimeOut = 5000,
 let onBlur = false;
 let updateResolution, uuid, updateBlur;
 let disabled = true;
+const regexQuality = /\(([^)]+)\)/;
 
-const getCurrentResolution = (resolutionList) => {
+const getCurrentResolution = (
+  resolutionList,
+  searchedQuality = "Auto",
+  auto = false
+) => {
   const resolutionArray = Array.from(resolutionList);
   let resolutionIndex;
+  console.log(searchedQuality);
   const resolution = resolutionArray.find((resolution, index) => {
     resolutionIndex = index;
+    if (auto) return resolution.innerText == searchedQuality;
     return resolution.getAttribute("aria-checked") === "true";
   });
+  if (resolution.innerText == "Auto") {
+    console.log("Auto");
+    return getCurrentResolution(resolutionList, searchedQuality, true);
+  }
+
   return { resolution, resolutionIndex };
 };
 
@@ -45,18 +57,43 @@ const openQualitySettings = () => {
   );
   if (!qualityTab) return;
   qualityTab.click();
+  return qualityTab;
 };
 
-const setQualityResolution = (index = -1) => {
+const getResolutionName = (resolutionElement, qualityName) => {
+  let resolutionName = resolutionElement.innerText;
+  if (!resolutionName.includes("Auto")) return resolutionName;
+
+  resolutionName = qualityName;
+  return resolutionName;
+};
+
+const qualityTabResolution = (qualityTab) => {
+  if (!qualityTab) return
+  const matches = qualityTab.innerText.match(regexQuality)
+  if (matches) return matches[1]
+  return
+}
+
+const setQualityResolution = (index = -1, qualityTab = null) => {
   const resolutionList = document.querySelectorAll(
     ".ytp-menuitem[role=menuitemradio]"
   );
-  const { resolution, resolutionIndex } = getCurrentResolution(resolutionList);
+
+  const qualityName = qualityTabResolution(qualityTab);
+  const { resolution, resolutionIndex } = getCurrentResolution(
+    resolutionList,
+    qualityName
+  );
+  const resolutionName = getResolutionName(resolution, qualityName);
   setCurrentResolutionIndex(resolutionIndex);
   if (index == -1) index = resolutionList.length - 2;
   const newResolution = resolutionList[index];
   if (newResolution) newResolution.click();
-  return resolution.innerText;
+
+  console.log(resolutionName);
+
+  return resolutionName;
 };
 
 const changeVideoLowResolution = (timer) => {
@@ -64,16 +101,16 @@ const changeVideoLowResolution = (timer) => {
   clearTimeout(updateBlur);
 
   if (disabled) return;
-  if (videoPlayer.value.paused || videoPlayer.value.ended ) return
+  if (videoPlayer.value.paused || videoPlayer.value.ended) return;
   if (onBlur) return;
 
   updateBlur = setTimeout(() => {
-    videoPlayer.value.style.filter = 'brightness(0)';
-  }, resolutionTimeOut - 1000 );  
+    videoPlayer.value.style.filter = "brightness(0)";
+  }, resolutionTimeOut - 1000);
 
   updateResolution = setTimeout(() => {
-    openQualitySettings();
-    const newResolution = setQualityResolution();
+    const qualityTab = openQualitySettings();
+    const newResolution = setQualityResolution(-1, qualityTab);
     onBlur = true;
     beginBlurTime(newResolution);
   }, timer || resolutionTimeOut);
@@ -87,8 +124,8 @@ const changeVideoLastResolution = (timer) => {
   if (!onBlur) return;
 
   updateBlur = setTimeout(() => {
-    videoPlayer.value.style.filter = 'brightness(1)';
-  }, resolutionTimeIn + 500 );
+    videoPlayer.value.style.filter = "brightness(1)";
+  }, resolutionTimeIn + 500);
 
   updateResolution = setTimeout(() => {
     openQualitySettings();
