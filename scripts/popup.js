@@ -58,7 +58,7 @@ const fetchAllInformations = () => {
       totalSavedData.textContent = dataSaved;
     })
     .catch((e) => {
-      errorDisplay.textContent = "An error occurred while fetching data";
+      errorDisplay.textContent = e.message;
     });
 };
 

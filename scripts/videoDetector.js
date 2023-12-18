@@ -10,7 +10,7 @@ const config = {
   subtree: true,
 };
 
-const setMainPlayer = async() => {
+const setMainPlayer = async () => {
   let mainPlayerTries = 0;
   return new Promise((resolve, reject) => {
     setInterval(() => {
@@ -24,16 +24,35 @@ const setMainPlayer = async() => {
   });
 };
 
+const checkBackgrounStatus = () => {
+  return new Promise((resolve, reject) => {
+    browser.runtime
+      .sendMessage({ action: "backgroundStatus" })
+      .then((response) => {
+        resolve(response.status);
+      });
+  });
+};
+
 const buildService = (node) => {
   if (built) return;
   if (!node) return;
   if (node.parentNode.parentNode.id != "movie_player") return;
 
-  actionIntegrer.integrateButtons(adsSkipper, resolutionReducer, node);
-  adsSkipper.setPlayers(mainPlayer, node);
-  resolutionReducer.setListeners(mainPlayer, node);
-  node.addEventListener("playing", adsSkipper.skipAd);
-  built = true;
+  checkBackgrounStatus().then((status) => {
+    if (status == "ready") {
+      actionIntegrer.integrateButtons(adsSkipper, resolutionReducer, node);
+      adsSkipper.setPlayers(mainPlayer, node);
+      resolutionReducer.setListeners(mainPlayer, node);
+      node.addEventListener("playing", adsSkipper.skipAd);
+      built = true;
+    }
+  });
+  if (built) return;
+
+  setTimeout(() => {
+    buildService(node);
+  }, 1000);
 };
 
 const mutationCallback = (mutationsList, _observer) => {

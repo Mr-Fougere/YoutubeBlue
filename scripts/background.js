@@ -3,6 +3,7 @@ const dataInjector = new DataInjector();
 const dataFormatter = new DataFormatter();
 const dbEngine = new SetupDataBase();
 const blurManager =  new BlurManager();
+let backgroundStatus = "not_ready"
 
 const setup = async () => {
   try {
@@ -11,9 +12,10 @@ const setup = async () => {
     await pullItems();
     setMessageListeners();
   } catch (error) {
-    console.error(error);
+    console.error(error)
   } finally {
     dbEngine.closeDB();
+    backgroundStatus = 'ready';
   }
 };
 
@@ -53,6 +55,10 @@ const setMessageListeners = () => {
 
     if (request.action == "endBlur") {
       blurManager.stopBlurTime(request.uuid);
+    }
+
+    if( request.action == "backgroundStatus"){
+      sendResponse({status: backgroundStatus})
     }
   });
 };
