@@ -159,6 +159,9 @@ const disableWindowListeners = () => {
 };
 
 const updaterBlurListeners = () => {
+
+  enableWindowListeners();
+
   document.hasFocus()
     ? changeVideoLowResolution(0)
     : changeVideoLastResolution(0);
