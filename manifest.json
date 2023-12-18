@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "YouTubeBlue",
-  "version": "0.3.4",
-  "version_name": "0.3.4-beta",
+  "version": "0.3.5",
+  "version_name": "0.3.5-beta",
   "author": "Mr-Fougere",
   "description": "YouTubeBlue is a browser extension with features to improve use of YouTube ",
   "permissions": ["storage", "tabs"],
@@ -40,9 +40,9 @@
     {
       "matches": ["https://www.youtube.com/*"],
       "js": [
-        "scripts/adSkipper.js",
-        "scripts/resolutionBlur.js",
-        "scripts/actionIntegration.js",
+        "classes/adsSkipper.js",
+        "classes/resolutionReducer.js",
+        "classes/actionIntegrer.js",
         "scripts/videoDetector.js"
       ],
       "css": ["assets/styles/action-integration.css","assets/styles/bluetify.css"]
