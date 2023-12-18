@@ -14,14 +14,12 @@ const getCurrentResolution = (
 ) => {
   const resolutionArray = Array.from(resolutionList);
   let resolutionIndex;
-  console.log(searchedQuality);
   const resolution = resolutionArray.find((resolution, index) => {
     resolutionIndex = index;
     if (auto) return resolution.innerText == searchedQuality;
     return resolution.getAttribute("aria-checked") === "true";
   });
   if (resolution.innerText == "Auto") {
-    console.log("Auto");
     return getCurrentResolution(resolutionList, searchedQuality, true);
   }
 
@@ -90,8 +88,6 @@ const setQualityResolution = (index = -1, qualityTab = null) => {
   if (index == -1) index = resolutionList.length - 2;
   const newResolution = resolutionList[index];
   if (newResolution) newResolution.click();
-
-  console.log(resolutionName);
 
   return resolutionName;
 };

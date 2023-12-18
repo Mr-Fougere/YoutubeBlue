@@ -34,7 +34,6 @@ const mutationCallback = (mutationsList, _observer) => {
     if (mutation.type === "childList") {
       mutation.addedNodes.forEach((node) => {
         if (node instanceof HTMLVideoElement) {
-          console.log(node);
           handleNewVideo(node);
         }
       });
