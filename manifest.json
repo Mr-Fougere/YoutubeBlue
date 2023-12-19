@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "YouTubeBlue",
-  "version": "0.3.8",
-  "version_name": "0.3.8-beta",
+  "version": "0.4.0",
+  "version_name": "0.4.0-beta",
   "author": "Mr-Fougere",
   "description": "YouTubeBlue is a browser extension with features to improve use of YouTube ",
   "permissions": ["storage", "tabs"],
@@ -21,16 +21,14 @@
     "48": "assets/icons/logo48.png",
     "64": "assets/icons/logo64.png",
     "96": "assets/icons/logo96.png",
-    "128": "assets/icons/logo128.png",
-    "256": "assets/icons/logo256.png"
+    "128": "assets/icons/logo128.png"
   },
   "action": {
     "default_icon": {
       "48": "assets/icons/logo48.png",
       "64": "assets/icons/logo64.png",
       "96": "assets/icons/logo96.png",
-      "128": "assets/icons/logo128.png",
-      "256": "assets/icons/logo256.png"
+      "128": "assets/icons/logo128.png"
     },
     "default_title": "YouTubeBlue",
     "default_popup": "views/popup.html"
@@ -45,7 +43,10 @@
         "classes/actionIntegrer.js",
         "scripts/videoDetector.js"
       ],
-      "css": ["assets/styles/action-integration.css","assets/styles/bluetify.css"]
+      "css": [
+        "assets/styles/action-integration.css",
+        "assets/styles/bluetify.css"
+      ]
     }
   ],
   "browser_specific_settings": {

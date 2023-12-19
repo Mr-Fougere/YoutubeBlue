@@ -22,6 +22,7 @@ class AdsSkipper {
   changeActiveStatus = (newStatus) => {
     this.active = newStatus;
     this.sendAdsSkipperStatus(newStatus);
+    if(newStatus) this.skipAd();
   };
 
   forwardAdVideo = () => {

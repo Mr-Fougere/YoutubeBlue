@@ -80,11 +80,13 @@ class ResolutionReducer {
     return;
   };
 
-  setQualityResolution = (index = -1, qualityTab = null) => {
-    const resolutionList = document.querySelectorAll(
-      ".ytp-menuitem[role=menuitemradio]"
-    );
+  setQualityResolution = (index = -1, resolutionList) => {
+    if (index == -1) index = resolutionList.length - 2;
+    const newResolution = resolutionList[index];
+    if (newResolution) newResolution.click();
+  };
 
+  updateLastResolution = (resolutionList = [], qualityTab = null) => {
     const qualityName = this.qualityTabResolution(qualityTab);
     const { resolution, resolutionIndex } = this.getCurrentResolution(
       resolutionList,
@@ -92,9 +94,6 @@ class ResolutionReducer {
     );
     const resolutionName = this.getResolutionName(resolution, qualityName);
     this.setCurrentResolutionIndex(resolutionIndex);
-    if (index == -1) index = resolutionList.length - 2;
-    const newResolution = resolutionList[index];
-    if (newResolution) newResolution.click();
 
     return resolutionName;
   };
@@ -108,23 +107,32 @@ class ResolutionReducer {
     if (this.onBlur) return;
 
     this.updateBlur = setTimeout(() => {
-      this.videoPlayer.style.filter = "brightness(0)";
+      this.videoPlayer.style.filter = "brightness(0.1)";
     }, this.RESOLUTION_TIMEOUT - 1000);
 
     this.updateResolution = setTimeout(() => {
       const qualityTab = this.openQualitySettings();
-      const newResolution = this.setQualityResolution(-1, qualityTab);
+      const resolutionList = document.querySelectorAll(
+        ".ytp-menuitem[role=menuitemradio]"
+      );
+      const currentResolution = this.updateLastResolution(
+        resolutionList,
+        qualityTab
+      );
+      this.setQualityResolution(-1, resolutionList);
       this.onBlur = true;
-      this.beginBlurTime(newResolution);
+      this.beginBlurTime(currentResolution);
     }, timer || this.RESOLUTION_TIMEOUT);
   };
 
-  changeVideoLastResolution = (timer) => {
+  changeVideoLastResolution = (timer, forced = false) => {
     clearTimeout(this.updateResolution);
     clearTimeout(this.updateBlur);
 
-    if (!this.active) return;
-    if (!this.onBlur) return;
+    if (!forced) {
+      if (!this.active) return;
+      if (!this.onBlur) return;
+    }
 
     this.updateBlur = setTimeout(() => {
       this.videoPlayer.style.filter = "brightness(1)";
@@ -132,7 +140,13 @@ class ResolutionReducer {
 
     this.updateResolution = setTimeout(() => {
       this.openQualitySettings();
-      this.setQualityResolution(this.fetchCurrentResolutionIndex());
+      const resolutionList = document.querySelectorAll(
+        ".ytp-menuitem[role=menuitemradio]"
+      );
+      this.setQualityResolution(
+        this.fetchCurrentResolutionIndex(),
+        resolutionList
+      );
       this.onBlur = false;
       this.endBlurTime();
     }, timer || this.RESOLUTION_TIMEIN);
@@ -190,9 +204,11 @@ class ResolutionReducer {
   };
 
   endBlurTime = () => {
-    browser.runtime.sendMessage({
-      action: "endBlur",
-      uuid: this.uuid,
-    }).catch(() => setTimeout(() => this.endBlurTime(), 1000));
+    browser.runtime
+      .sendMessage({
+        action: "endBlur",
+        uuid: this.uuid,
+      })
+      .catch(() => setTimeout(() => this.endBlurTime(), 1000));
   };
 }

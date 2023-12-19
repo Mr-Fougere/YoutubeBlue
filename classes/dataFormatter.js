@@ -39,7 +39,7 @@ class DataFormatter {
     formattedData.time = 0;
     formattedData.averageAdsTime = 0;
     formattedData.blurTime = 0;
-    
+
     for (const item of this.data) {
       if (item.count) {
         formattedData.count += item.count;
@@ -59,8 +59,7 @@ class DataFormatter {
       }
     }
 
-    formattedData.averageAdsTime =
-    this.timeConverter(Math.round(formattedData.time / formattedData.count) || 0);
+    formattedData.averageAdsTime = Math.round(formattedData.time / formattedData.count) + "s";
     formattedData.time = this.timeConverter(formattedData.time);
     formattedData.dataSaved = this.dataConverter(formattedData.dataSaved);
     formattedData.blurTime = this.timeConverter(formattedData.blurTime);

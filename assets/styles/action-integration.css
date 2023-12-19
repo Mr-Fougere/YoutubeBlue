@@ -16,5 +16,5 @@ button.ytp-ads-button[aria-enabled="false"] svg g:first-child path {
 }
 
 .video-stream.html5-main-video {
-  transition: filter 0.5s ease-in;
+  transition: filter 1s ease-in;
 }

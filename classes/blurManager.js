@@ -28,7 +28,6 @@ class BlurManager extends DataInjector {
         this.stopBlurTime(uuid, true);
       }
     } catch (error) {
-      console.log("Error checking blur:", error);
       this.stopBlurTime(uuid, true);
     }
   };
