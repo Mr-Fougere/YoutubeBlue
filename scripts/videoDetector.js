@@ -28,7 +28,7 @@ const checkBackgrounStatus = () => {
   });
 };
 
-const bindService = (node) => {
+const bindService = () => {
   checkBackgrounStatus().then((status) => {
     if (status == "ready" && videoPlayer && moviePlayer) {
       adsSkipper.setPlayers(moviePlayer, videoPlayer);
@@ -51,7 +51,7 @@ const setupVariables = (player) => {
 
   if (previousURL != window.location.href) {
     previousURL = window.location.href;
-    if (bind) resolutionReducer.changeVideoLastResolution(0, true);
+    if (bind && document.hasFocus()) resolutionReducer.changeVideoLastResolution();
     if (previousURL.includes("youtube.com/watch?v=") && !bind) {
       bindService();
     }

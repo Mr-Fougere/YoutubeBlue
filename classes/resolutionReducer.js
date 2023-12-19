@@ -98,7 +98,7 @@ class ResolutionReducer {
     return resolutionName;
   };
 
-  changeVideoLowResolution = (timer) => {
+  changeVideoLowResolution = () => {
     clearTimeout(this.updateResolution);
     clearTimeout(this.updateBlur);
 
@@ -122,16 +122,15 @@ class ResolutionReducer {
       this.setQualityResolution(-1, resolutionList);
       this.onBlur = true;
       this.beginBlurTime(currentResolution);
-    }, timer || this.RESOLUTION_TIMEOUT);
+    }, this.RESOLUTION_TIMEOUT);
   };
 
-  changeVideoLastResolution = (timer, forced = false) => {
+  changeVideoLastResolution = () => {
     clearTimeout(this.updateResolution);
     clearTimeout(this.updateBlur);
 
     if (!this.active) return;
-
-    if (!forced || !this.onBlur) return;
+    if (!this.onBlur) return;
 
     this.updateBlur = setTimeout(() => {
       this.videoPlayer.style.filter = "brightness(1)";
@@ -148,7 +147,7 @@ class ResolutionReducer {
       );
       this.onBlur = false;
       this.endBlurTime();
-    }, timer || this.RESOLUTION_TIMEIN);
+    }, this.RESOLUTION_TIMEIN);
   };
 
   sendResolutionBlurStatus = (state) => {
@@ -167,6 +166,7 @@ class ResolutionReducer {
     this.onBlur = false;
     this.active = status;
     this.sendResolutionBlurStatus(status);
+    if (status) this.changeVideoLastResolution();
   };
 
   setListeners = (player, videoPlayer) => {
