@@ -3,9 +3,7 @@ class ActionIntegrer {
     this.adsSkiper = null;
     this.resolutionReducer = null;
     this.videoPlayer = null;
-    this.settingsButton = document.querySelector(
-      "button.ytp-button.ytp-settings-button"
-    );
+    this.settingsButton = null;
   }
 
   createResolutionBlurCheckbox = () => {
@@ -143,7 +141,7 @@ class ActionIntegrer {
     if (!settingMenu) {
       setTimeout(() => {
         this.addResolutionBlurCheckbox();
-      }, 100);
+      }, 250);
       return;
     }
 
@@ -159,6 +157,30 @@ class ActionIntegrer {
     if (rightControls.querySelector(".ytp-ads-button")) return;
     const adsSkipButton = this.createAdSkipper();
     rightControls.prepend(adsSkipButton);
+  };
+
+  findSettingButton = () => {
+    let tries = 0;
+
+    return new Promise((resolve, reject) => {
+      const settingButton = document.querySelector(
+        ".ytp-button.ytp-settings-button"
+      );
+      tries++;
+      if (settingButton) {
+        this.settingsButton = settingButton;
+        resolve();
+      } else {
+        if (tries > 10) {
+          reject();
+        }
+        setTimeout(() => {
+          this.findSettingButton().then(() => {
+            resolve();
+          });
+        }, 250);
+      }
+    });
   };
 
   integrateButtons = (adsSkiper, resolutionReducer, videoPlayer) => {
@@ -179,14 +201,14 @@ class ActionIntegrer {
 
     browser.runtime
       .sendMessage({ action: "getFeatureState", name: "resolutionBlur" })
-      .then((response) => {
+      .then(async (response) => {
+        await this.findSettingButton();
         if (!this.settingsButton) return;
         this.resolutionReducer.changeActiveStatus(response);
-
         this.settingsButton.addEventListener("click", () => {
           setTimeout(() => {
             this.addResolutionBlurCheckbox();
-          }, 100);
+          }, 250);
         });
       });
   };

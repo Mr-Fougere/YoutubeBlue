@@ -129,10 +129,9 @@ class ResolutionReducer {
     clearTimeout(this.updateResolution);
     clearTimeout(this.updateBlur);
 
-    if (!forced) {
-      if (!this.active) return;
-      if (!this.onBlur) return;
-    }
+    if (!this.active) return;
+
+    if (!forced || !this.onBlur) return;
 
     this.updateBlur = setTimeout(() => {
       this.videoPlayer.style.filter = "brightness(1)";

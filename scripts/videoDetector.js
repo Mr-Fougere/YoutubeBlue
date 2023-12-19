@@ -51,7 +51,7 @@ const setupVariables = (player) => {
 
   if (previousURL != window.location.href) {
     previousURL = window.location.href;
-    resolutionReducer.changeVideoLastResolution(0,true);
+    if (bind) resolutionReducer.changeVideoLastResolution(0, true);
     if (previousURL.includes("youtube.com/watch?v=") && !bind) {
       bindService();
     }
